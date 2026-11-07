@@ -925,7 +925,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // VERTICAL MOVEMENT
         tl.to(
           coupleParallax, {
-            y: () => -scene.clientHeight * 1.06,
+            y: () => -scene.clientHeight * 1.16,
             duration: parallaxDuration,
             ease: "none",
           },
@@ -1503,7 +1503,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // ==========================================
   // 8. OUTRO
   // ==========================================
-
   function buildOutro(isMobile) {
     const scene = $(".scene-outro");
 
@@ -1658,7 +1657,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // ==========================================
   // 9. LOCATION WORK SECTION
   // ==========================================
-
   function buildLocationSection(footerReveal = null) {
     const section = $(".location-section");
 
