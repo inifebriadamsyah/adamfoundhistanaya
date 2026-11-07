@@ -8,6 +8,53 @@ window.addEventListener("pageshow", () => {
   window.scrollTo(0, 0);
 });
 
+async function preparePreloaderImages() {
+  const images = [
+    ...document.querySelectorAll(".preloader-images img")
+  ];
+
+  const results = await Promise.all(
+    images.map(async (img) => {
+      // Tunggu sampai gambar selesai dimuat
+      if (!img.complete) {
+        await new Promise((resolve) => {
+          img.addEventListener("load", resolve, {
+            once: true
+          });
+          img.addEventListener("error", resolve, {
+            once: true
+          });
+        });
+      }
+
+      // Pastikan gambar berhasil dimuat
+      if (img.naturalWidth === 0) {
+        console.warn("Preloader image gagal dimuat:", img.src);
+        return false;
+      }
+
+      // Tunggu sampai gambar selesai di-decode
+      if (typeof img.decode === "function") {
+        try {
+          await img.decode();
+        } catch (error) {
+          console.warn("Image decode warning:", img.src, error);
+        }
+      }
+
+      return true;
+    })
+  );
+
+  const allReady = results.every(Boolean);
+
+  console.log(
+    `Preloader images: ${results.filter(Boolean).length}/${images.length} ready`
+  );
+
+  return allReady;
+}
+
 async function prepareHeroImages() {
   const heroImages = document.querySelectorAll(
     ".sky-container img, .cloud-back img, .cloud-front img, .window-container img"
@@ -39,7 +86,7 @@ async function prepareHeroImages() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // Mulai menyiapkan gambar hero tanpa menghambat preloader.
+  const preloaderImagesReadyPromise = preparePreloaderImages();
   const heroImagesReadyPromise = prepareHeroImages();
 
   if (window.guestReady) {
@@ -186,6 +233,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       startScenes();
     }
+  }
+  const preloaderImagesReady = await preloaderImagesReadyPromise;
+
+  if (!preloaderImagesReady) {
+    console.warn(
+      "Sebagian gambar preloader gagal dimuat. Animasi tetap dilanjutkan."
+    );
   }
 
   const introTimeline = gsap.timeline({
