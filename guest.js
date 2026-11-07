@@ -17,8 +17,7 @@ window.guestReady = (async () => {
     urlParams.get("to") || ""
   ).trim().toLowerCase();
 
-  // DATA DEMO SEMENTARA
-  // Nantinya data ini akan diambil dari Supabase.
+  // DATA TAMU
   const demoGuests = {
     "demo-andi": "Bapak Andi",
     "pegawai-kantor": "Pegawai di Kantor",
@@ -30,10 +29,14 @@ window.guestReady = (async () => {
   // Cari nama penerima.
   const guestName = demoGuests[guestSlug] || "Tamu Undangan";
 
-  // Tampilkan nama ke HTML.
+  // Tampilkan nama pada hero.
   guestHeading.textContent = guestName;
 
-  // Simpan informasi tamu yang sedang membuka undangan.
+  // Ubah title pada tab browser.
+  document.title =
+    `Adam finally found his Hawa - Undangan Tasyakuran Pernikahan kepada ${guestName}`;
+
+  // Simpan informasi tamu.
   window.invitationGuest = {
     slug: guestSlug,
     displayName: guestName,
