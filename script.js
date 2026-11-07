@@ -8,28 +8,64 @@ window.addEventListener("pageshow", () => {
   window.scrollTo(0, 0);
 });
 
+async function prepareHeroImages() {
+  const heroImages = document.querySelectorAll(
+    ".sky-container img, .cloud-back img, .cloud-front img, .window-container img"
+  );
+
+  await Promise.all(
+    [...heroImages].map(async (img) => {
+      // Tunggu sampai gambar selesai dimuat.
+      if (!img.complete) {
+        await new Promise((resolve) => {
+          img.addEventListener("load", resolve, {
+            once: true,
+          });
+
+          img.addEventListener("error", resolve, {
+            once: true,
+          });
+        });
+      }
+
+      // Pastikan gambar sudah selesai didekode.
+      if (img.naturalWidth > 0 && img.decode) {
+        try {
+          await img.decode();
+        } catch (_) {}
+      }
+    })
+  );
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
+  // Mulai menyiapkan gambar hero tanpa menghambat preloader.
+  const heroImagesReadyPromise = prepareHeroImages();
+
   if (window.guestReady) {
     try {
       await window.guestReady;
-    } catch (error) {
-      console.error("Guest loading error:", error);
-    }
+    } catch (_) {}
   }
 
-  if (document.fonts?.ready) await document.fonts.ready;
+  if (document.fonts?.ready) {
+    await document.fonts.ready;
+  }
 
   gsap.registerPlugin(ScrollTrigger, CustomEase, SplitText);
+
   CustomEase.create("hop", "0.9, 0, 0.1, 1");
 
-  // Address bar mobile tidak memicu refresh berlebihan.
   ScrollTrigger.config({
     ignoreMobileResize: true,
   });
 
-  const $ = (selector, root = document) => root.querySelector(selector);
+  const $ = (selector, root = document) =>
+    root.querySelector(selector);
 
+  // ==========================================
   // 1. LENIS
+  // ==========================================
 
   const lenis = new Lenis({
     autoRaf: false,
@@ -46,9 +82,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   gsap.ticker.lagSmoothing(0);
+
   lenis.stop();
 
+  // ==========================================
   // 2. PRELOADER
+  // ==========================================
+
   const createSplit = (selector, type, className) => {
     const element = $(selector);
 
@@ -64,16 +104,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   const splitPreloaderHeader = createSplit(
     ".preloader-header a",
     "chars",
-    "char",
+    "char"
   );
 
-  const splitPreloaderCopy = createSplit(".preloader-copy p", "lines", "line");
+  const splitPreloaderCopy = createSplit(
+    ".preloader-copy p",
+    "lines",
+    "line"
+  );
 
-  const splitHeader = SplitText.create(".hero-header h1, .hero-header h6", {
-    type: "lines",
-    linesClass: "line",
-    mask: "lines",
-  });
+  const splitHeader = SplitText.create(
+    ".hero-header h1, .hero-header h6", {
+      type: "lines",
+      linesClass: "line",
+      mask: "lines",
+    }
+  );
 
   const chars = splitPreloaderHeader?.chars || [];
   const lines = splitPreloaderCopy?.lines || [];
@@ -111,22 +157,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     scale: 2,
   });
 
-  const preloaderImages = gsap.utils.toArray(".preloader-images .img");
+  const preloaderImages = gsap.utils.toArray(
+    ".preloader-images .img"
+  );
 
-  const preloaderImagesInner = gsap.utils.toArray(".preloader-images .img img");
+  const preloaderImagesInner = gsap.utils.toArray(
+    ".preloader-images .img img"
+  );
 
   let introFinished = false;
   let logoFinished = false;
   let scenesStarted = false;
 
-  function tryStartScenes() {
-    console.log("[PRELOADER]", {
-      introFinished,
-      logoFinished,
-      scenesStarted,
-    });
-
+  async function tryStartScenes() {
     if (introFinished && logoFinished && !scenesStarted) {
+      // Mencegah fungsi dipanggil dua kali.
+      scenesStarted = true;
+
+      // Tunggu sampai seluruh gambar hero selesai didekode.
+      await heroImagesReadyPromise;
+
       window.scrollTo(0, 0);
 
       lenis.scrollTo(0, {
@@ -134,7 +184,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         force: true,
       });
 
-      scenesStarted = true;
       startScenes();
     }
   }
@@ -171,7 +220,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ease: "hop",
         delay: index * 0.75,
       },
-      "-=5",
+      "-=5"
     );
   });
 
@@ -183,7 +232,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ease: "hop",
         delay: index * 0.75,
       },
-      "-=5.25",
+      "-=5.25"
     );
   });
 
@@ -194,7 +243,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       ease: "hop",
       stagger: 0.1,
     },
-    "-=5.5",
+    "-=5.5"
   );
 
   introTimeline.to(
@@ -204,7 +253,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       ease: "hop",
       stagger: 0.025,
     },
-    "-=5",
+    "-=5"
   );
 
   introTimeline.to(
@@ -213,7 +262,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       duration: 1,
       ease: "hop",
     },
-    "-=1.5",
+    "-=1.5"
   );
 
   introTimeline.to(
@@ -223,7 +272,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       ease: "hop",
       stagger: 0.1,
     },
-    "-=2",
+    "-=2"
   );
 
   // Logo animation.
@@ -259,18 +308,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         requestAnimationFrame(() => {
-          const centerX = document.documentElement.clientWidth / 2;
+          const centerX =
+            document.documentElement.clientWidth / 2;
 
-          const firstRect = initialChar.getBoundingClientRect();
+          const firstRect =
+            initialChar.getBoundingClientRect();
 
-          const lastRect = lastChar.getBoundingClientRect();
+          const lastRect =
+            lastChar.getBoundingClientRect();
 
-          const firstX = centerX - firstRect.left - firstRect.width;
+          const firstX =
+            centerX - firstRect.left - firstRect.width;
 
-          const lastX = centerX - lastRect.left;
+          const lastX =
+            centerX - lastRect.left;
 
           gsap.to([initialChar, lastChar], {
-            x: (index) => (index === 0 ? firstX : lastX),
+            x: (index) =>
+              index === 0 ? firstX : lastX,
+
             duration: 1,
             delay: 0.5,
             ease: "hop",
@@ -295,7 +351,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
       },
     },
-    "-=2.5",
+    "-=2.5"
   );
 
   introTimeline.to(
@@ -304,7 +360,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       duration: 1.75,
       ease: "hop",
     },
-    "-=0.5",
+    "-=0.5"
   );
 
   introTimeline.to(
@@ -315,7 +371,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       ease: "power4.out",
       stagger: 0.1,
     },
-    "-=0.75",
+    "-=0.75"
   );
 
   introTimeline.to(
@@ -326,10 +382,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       ease: "power4.out",
       stagger: 0.1,
     },
-    "-=0.75",
+    "-=0.75"
   );
 
+  // ==========================================
   // 3. HELPER SCENE
+  // ==========================================
+
   const timing = (isMobile) =>
     isMobile ? {
       center: 0.3,
@@ -348,7 +407,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const scenePin = (trigger, screens) => ({
     trigger,
     start: "top top",
-    end: () => `+=${Math.round(window.innerHeight * screens)}`,
+    end: () =>
+      `+=${Math.round(window.innerHeight * screens)}`,
     pin: true,
     pinSpacing: true,
     scrub: 1.2,
@@ -365,7 +425,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     copy: $(".scene-copy", scene),
   });
 
+  // ==========================================
   // WORD FILL
+  // ==========================================
 
   function splitWordFills(element) {
     if (!element) return [];
@@ -392,7 +454,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // ==========================================
   // CLOUD DRIFT
+  // ==========================================
+
   const driftByScene = new Map();
 
   const driftObserver = new IntersectionObserver((entries) => {
@@ -402,7 +467,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }) => {
       driftByScene
         .get(target)
-        ?.forEach((tween) => (isIntersecting ? tween.resume() : tween.pause()));
+        ?.forEach((tween) =>
+          isIntersecting ? tween.resume() : tween.pause()
+        );
     });
   });
 
@@ -410,7 +477,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const {
       cloudBack,
       cloudFront
-    } = sceneParts(scene);
+    } =
+    sceneParts(scene);
 
     if (!cloudBack || !cloudFront) return;
 
@@ -441,14 +509,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     driftObserver.observe(scene);
   }
 
+  // ==========================================
   // 4. HERO
+  // ==========================================
+
   function buildHero(isMobile, fills) {
     const scene = $(".scene-hero");
 
-    if (!scene) {
-      console.error("Hero section tidak ditemukan.");
-      return;
-    }
+    if (!scene) return;
 
     const {
       sky,
@@ -456,24 +524,28 @@ document.addEventListener("DOMContentLoaded", async () => {
       cloudFront,
       win,
       header,
-      copy
+      copy,
     } = sceneParts(scene);
 
     const center = $(".hero-center", scene);
     const heroText = $(".hero-copy h2", scene);
+
     const t = timing(isMobile);
 
     const paperPlane = $(".hero-paper-plane", scene);
-    const coupleParallax = $(".hero-couple-parallax", scene);
+    const coupleParallax = $(
+      ".hero-couple-parallax",
+      scene
+    );
 
     const parallaxTopTrack = $(
       ".hero-parallax-row--top .hero-parallax-track",
-      scene,
+      scene
     );
 
     const parallaxBottomTrack = $(
       ".hero-parallax-row--bottom .hero-parallax-track",
-      scene,
+      scene
     );
 
     if (
@@ -486,7 +558,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       !center ||
       !heroText
     ) {
-      console.error("Elemen hero tidak lengkap.");
       return;
     }
 
@@ -514,7 +585,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: 0.95,
           ease: "none",
         },
-        0,
+        0
       )
       .to(
         header, {
@@ -523,7 +594,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: 0.5,
           ease: "none",
         },
-        0,
+        0
       )
       .to(
         header, {
@@ -532,7 +603,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: 0.5,
           ease: "none",
         },
-        0.5,
+        0.5
       )
       .to(
         header, {
@@ -540,7 +611,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: 0.15,
           ease: "none",
         },
-        0.35,
+        0.35
       )
       .to(
         sky, {
@@ -548,7 +619,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: 1,
           ease: "none",
         },
-        0,
+        0
       )
       .to(
         cloudBack, {
@@ -556,7 +627,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: 1,
           ease: "none",
         },
-        0,
+        0
       )
       .to(
         cloudFront, {
@@ -564,7 +635,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: 1,
           ease: "none",
         },
-        0,
+        0
       )
       .to(
         center, {
@@ -575,7 +646,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           ease: "none",
           opacity: 0,
         },
-        t.center,
+        t.center
       )
       .to(
         copy, {
@@ -583,7 +654,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: 0.001,
           ease: "none",
         },
-        t.copy,
+        t.copy
       );
 
     // Hero text fade in.
@@ -598,7 +669,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         duration: Math.max(0.12, t.fillStart - t.center),
         ease: "none",
       },
-      t.center * 1.2,
+      t.center * 1.2
     );
 
     // Word fill.
@@ -609,40 +680,52 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: t.fillDur,
           ease: "none",
         },
-        t.fillStart + (i / denominator) * t.fillLen,
+        t.fillStart + (i / denominator) * t.fillLen
       );
     });
 
     // Animasi awal cloud selesai pada timeline position 1.
     const cloudDriftStart = Math.max(1, t.fillStart);
 
-    const cloudDriftDuration = Math.max(0.01, fillEnd - cloudDriftStart);
+    const cloudDriftDuration = Math.max(
+      0.01,
+      fillEnd - cloudDriftStart
+    );
 
     // CLOUD BACK
     tl.to(
       cloudBack, {
-        y: () => -skyDistance() * 0.25 - window.innerHeight * 0.25,
+        y: () =>
+          -skyDistance() * 0.25 -
+          window.innerHeight * 0.25,
         duration: cloudDriftDuration,
         ease: "none",
       },
-      cloudDriftStart,
+      cloudDriftStart
     );
 
     // CLOUD FRONT
     tl.to(
       cloudFront, {
-        y: () => -skyDistance() * 0.45 - window.innerHeight * 0.125,
+        y: () =>
+          -skyDistance() * 0.45 -
+          window.innerHeight * 0.125,
         duration: cloudDriftDuration,
         ease: "none",
       },
-      cloudDriftStart,
+      cloudDriftStart
     );
 
+    // ==========================================
     // PAPER PLANE: FOLLOW HERO TEXT FILL
-    if (paperPlane) {
-      const planeStartX = () => scene.clientWidth + paperPlane.offsetWidth;
+    // ==========================================
 
-      const planeEndX = () => -paperPlane.offsetWidth;
+    if (paperPlane) {
+      const planeStartX = () =>
+        scene.clientWidth + paperPlane.offsetWidth;
+
+      const planeEndX = () =>
+        -paperPlane.offsetWidth;
 
       gsap.set(paperPlane, {
         autoAlpha: 0,
@@ -669,51 +752,57 @@ document.addEventListener("DOMContentLoaded", async () => {
           ease: "none",
           immediateRender: false,
         },
-        t.fillStart,
+        t.fillStart
       );
 
       tl.set(
         paperPlane, {
           autoAlpha: 0,
         },
-        fillEnd,
+        fillEnd
       );
     }
 
+    // ==========================================
     // CLOUD FADE
+    // ==========================================
+
     tl.to(
       [cloudBack, cloudFront], {
         opacity: 0,
         duration: cloudFadeDuration * 0.5,
         ease: "power2.out",
       },
-      textExitStart,
+      textExitStart
     );
 
+    // ==========================================
     // HERO TEXT EXIT
+    // ==========================================
+
     tl.to(
       heroText, {
-        y: () => -(window.innerHeight + heroText.offsetHeight) * 0.65,
+        y: () =>
+          -(window.innerHeight + heroText.offsetHeight) * 0.65,
         autoAlpha: 0,
         opacity: 0,
         duration: textExitDuration + 0.75,
         ease: "power2.out",
       },
-      textExitStart,
+      textExitStart
     );
 
-
+    // ==========================================
     // HERO COUPLE TEXT PARALLAX
-    // CONTINUOUS REPEATING TEXT
+    // ==========================================
+
     if (
       coupleParallax &&
       parallaxTopTrack &&
       parallaxBottomTrack
     ) {
-
-      // 1. REPEAT TEXT CONTENT
+      // REPEAT TEXT CONTENT
       function repeatParallaxTrack(track, requiredWidth) {
-
         // Bersihkan clone jika fungsi dipanggil kembali.
         track
           .querySelectorAll("[data-parallax-clone]")
@@ -731,7 +820,6 @@ document.addEventListener("DOMContentLoaded", async () => {
           track.scrollWidth < requiredWidth &&
           iterations < 40
         ) {
-
           originalItems.forEach((item) => {
             const clone = item.cloneNode(true);
 
@@ -746,7 +834,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       // Track dibuat cukup panjang untuk menampung seluruh perjalanan.
-      // 4.8 kali lebar viewport menjaga baris atas tetap terisi.
       repeatParallaxTrack(
         parallaxTopTrack,
         scene.clientWidth * 4.8
@@ -757,11 +844,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         scene.clientWidth * 4.8
       );
 
-      // 2. PARALLAX TIMING
-      // Mulai bersamaan dengan heroText mulai keluar.
+      // PARALLAX TIMING
       const parallaxStart = textExitStart;
 
-      // Ambil durasi timeline sebelum tween parallax ditambahkan.
       const parallaxEnd = tl.duration();
 
       const parallaxDuration = Math.max(
@@ -770,40 +855,30 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
 
       if (parallaxDuration > 0) {
-
-        // 3. INITIAL POSITION
-        // Saat halaman pertama kali dibuka,
-        // kedua baris berada di luar layar bagian bawah.
+        // INITIAL POSITION
         gsap.set(coupleParallax, {
           y: () => scene.clientHeight * 0.18,
         });
 
-        // Baris atas dimulai dari kiri.
         gsap.set(parallaxTopTrack, {
           x: 0,
         });
 
-        // Baris bawah dimulai sedikit ke kiri,
-        // sehingga pergerakannya nanti menuju kanan.
         gsap.set(parallaxBottomTrack, {
           x: () => -scene.clientWidth * 2.37,
         });
 
-
-        // 4. VERTICAL MOVEMENT
-
-        // Masuk dari bawah saat heroText mulai exit,
-        // kemudian bergerak naik melewati layar.
+        // VERTICAL MOVEMENT
         tl.to(
           coupleParallax, {
-            y: () => -scene.clientHeight * 1.16,
+            y: () => -scene.clientHeight * 0.85,
             duration: parallaxDuration,
             ease: "none",
           },
           parallaxStart
         );
 
-        // 5. TOP ROW: MOVE LEFT
+        // TOP ROW: MOVE LEFT
         tl.to(
           parallaxTopTrack, {
             x: () => -scene.clientWidth * 1.2,
@@ -813,7 +888,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           parallaxStart
         );
 
-        // 6. BOTTOM ROW: MOVE RIGHT
+        // BOTTOM ROW: MOVE RIGHT
         tl.to(
           parallaxBottomTrack, {
             x: 0,
@@ -824,10 +899,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
       }
     }
+
     driftClouds(scene);
   }
 
+  // ==========================================
   // 5. INTRO
+  // ==========================================
 
   const CLIP = {
     hiddenBottom: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
@@ -917,7 +995,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: 0.72,
           ease: "hop",
         },
-        at(t.enter),
+        at(t.enter)
       )
       .to(
         c.inner, {
@@ -925,7 +1003,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: 0.9,
           ease: "hop",
         },
-        at(t.enter),
+        at(t.enter)
       )
       .to(
         c.photo, {
@@ -933,7 +1011,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: 0.3,
           ease: "hop",
         },
-        at(t.photo),
+        at(t.photo)
       )
       .to(
         c.img, {
@@ -941,7 +1019,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: 0.55,
           ease: "hop",
         },
-        at(t.photo),
+        at(t.photo)
       )
       .to(
         c.scan, {
@@ -950,7 +1028,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: 0.64,
           ease: "none",
         },
-        at(t.scan),
+        at(t.scan)
       )
       .to(
         c.id, {
@@ -959,7 +1037,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: 0.12,
           ease: "power2.out",
         },
-        at(t.id),
+        at(t.id)
       )
       .to(
         c.name, {
@@ -968,7 +1046,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: 0.16,
           ease: "power2.out",
         },
-        at(t.name),
+        at(t.name)
       );
 
     c.rows.forEach((row, i) => {
@@ -979,7 +1057,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: 0.13,
           ease: "power2.out",
         },
-        at(t.rows + i * 0.1),
+        at(t.rows + i * 0.1)
       );
     });
   }
@@ -992,24 +1070,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         duration: t.exitDur,
         ease: "hop",
       },
-      at(t.exit),
+      at(t.exit)
     ).to(
       c.inner, {
         scale: 1.16,
         duration: t.exitDur,
         ease: "hop",
       },
-      at(t.exit),
+      at(t.exit)
     );
   }
 
+  // ==========================================
   // 6. OUTRO ELEMENTS
+  // ==========================================
 
   const outroScene = $(".scene-outro");
   const main = $("main");
 
   if (!outroScene || !main) {
-    console.error("Scene outro atau main tidak ditemukan.");
     lenis.start();
     return;
   }
@@ -1018,15 +1097,28 @@ document.addEventListener("DOMContentLoaded", async () => {
   const outroBgZoom = $(".outro-bg-zoom", outroBg);
 
   const outroPoster = $(".outro-prelocation", outroScene);
-  const outroPosterCopy = $(".outro-prelocation-copy", outroScene);
+
+  const outroPosterCopy = $(
+    ".outro-prelocation-copy",
+    outroScene
+  );
 
   const outroWin = $(".window-container", outroScene);
-  const outroWinZoom = $(".outro-window-zoom", outroWin);
+
+  const outroWinZoom = $(
+    ".outro-window-zoom",
+    outroWin
+  );
 
   const outroHeader = $(".outro-header", outroScene);
 
-  if (!outroBg || !outroBgZoom || !outroWin || !outroWinZoom || !outroHeader) {
-    console.error("Elemen outro tidak lengkap.");
+  if (
+    !outroBg ||
+    !outroBgZoom ||
+    !outroWin ||
+    !outroWinZoom ||
+    !outroHeader
+  ) {
     lenis.start();
     return;
   }
@@ -1038,10 +1130,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Buat clipping viewport.
   const outroViewport = document.createElement("div");
+
   outroViewport.className = "outro-overlay-viewport";
 
   // Pindahkan elemen outro ke viewport.
-  outroViewport.append(outroBg, outroWin, outroHeader);
+  outroViewport.append(
+    outroBg,
+    outroWin,
+    outroHeader
+  );
 
   if (outroPoster) {
     outroViewport.appendChild(outroPoster);
@@ -1051,30 +1148,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     outroViewport.appendChild(outroPosterCopy);
   }
 
-  // PENTING:
-  // Masukkan viewport ke dalam main agar elemen tidak terlepas
-  // dari DOM setelah dipindahkan.
+  // Masukkan viewport ke dalam main.
   main.appendChild(outroViewport);
 
   // Sembunyikan sebelum OUTRO REVEAL dimulai.
   gsap.set(outroViewport, {
     autoAlpha: 0,
+    clipPath: "inset(0% 0% 0% 0%)",
   });
 
   // SPLITTEXT OUTRO HEADER
-
   const splitOutroHeader = SplitText.create(
     ".outro-header h1, .outro-header p", {
       type: "lines",
       linesClass: "line",
       mask: "lines",
-    },
+    }
   );
 
   const outroHeaderLines = splitOutroHeader.lines;
 
   // SPLITTEXT PRELOCATION COPY
-
   let splitOutroCopy = null;
   let outroCopyLines = [];
 
@@ -1082,11 +1176,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const copyParagraph = $("p", outroPosterCopy);
 
     if (copyParagraph) {
-      splitOutroCopy = SplitText.create(copyParagraph, {
-        type: "lines",
-        linesClass: "line",
-        mask: "lines",
-      });
+      splitOutroCopy = SplitText.create(
+        copyParagraph, {
+          type: "lines",
+          linesClass: "line",
+          mask: "lines",
+        }
+      );
 
       outroCopyLines = splitOutroCopy.lines;
     }
@@ -1103,21 +1199,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  // ==========================================
   // 7. INTRO TIMELINE
+  // ==========================================
 
   function buildIntro(isMobile) {
     const section = $(".intro-section");
 
-    if (!section) {
-      console.error("Intro section tidak ditemukan.");
-      return;
-    }
+    if (!section) return;
 
     const bg = $(".intro-bg", section);
 
-    const groom = cardParts($(".intro-panel--groom", section));
+    const groom = cardParts(
+      $(".intro-panel--groom", section)
+    );
 
-    const bride = cardParts($(".intro-panel--bride", section));
+    const bride = cardParts(
+      $(".intro-panel--bride", section)
+    );
 
     [groom, bride].forEach(initCard);
 
@@ -1185,14 +1284,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Selalu gunakan durasi scroll mobile.
     const baseStoryScreens = 20;
 
-    const storyScreens = baseStoryScreens * (STORY_UNITS / STORY_BASE_UNITS);
+    const storyScreens =
+      baseStoryScreens *
+      (STORY_UNITS / STORY_BASE_UNITS);
 
-    const storyPx = window.innerHeight * storyScreens;
+    const storyPx =
+      window.innerHeight * storyScreens;
 
     const BG_SCROLL_MULTIPLIER = 3.2;
 
     const leadIn =
-      (STORY_UNITS * verticalDistance() * BG_SCROLL_MULTIPLIER) / storyPx;
+      (STORY_UNITS *
+        verticalDistance() *
+        BG_SCROLL_MULTIPLIER) /
+      storyPx;
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -1202,7 +1307,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         end: () =>
           `+=${Math.round(
             verticalDistance() * BG_SCROLL_MULTIPLIER +
-            window.innerHeight * storyScreens,
+            window.innerHeight * storyScreens
           )}`,
 
         pin: true,
@@ -1217,7 +1322,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const at = (n) => `story+=${n}`;
 
-    // FASE 0: background bergerak dari bawah ke posisi awal.
+    // FASE 0: Background bergerak dari bawah ke posisi awal.
     if (leadIn > 0) {
       tl.fromTo(
         bg, {
@@ -1227,7 +1332,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: leadIn / 0.5,
           ease: "power4.out",
         },
-        0,
+        0
       );
     }
 
@@ -1241,13 +1346,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         duration: PAN.duration,
         ease: "power1.inOut",
       },
-      at(PAN.start),
+      at(PAN.start)
     );
 
     hideCard(tl, groom, GROOM, at);
 
     // FASE 3: Bride masuk dan keluar.
     revealCard(tl, bride, BRIDE, at);
+
     hideCard(tl, bride, BRIDE, at);
 
     // FASE 4: Background kembali ke bawah.
@@ -1257,24 +1363,30 @@ document.addEventListener("DOMContentLoaded", async () => {
         duration: BG_RETURN_DURATION,
         ease: "power1.inOut",
       },
-      at(STORY_BASE_UNITS),
+      at(STORY_BASE_UNITS)
     );
 
-
+    // ==========================================
     // OUTRO REVEAL
-    const OUTRO_DURATION = BG_RETURN_DURATION * 5.5;
+    // ==========================================
 
-    const OUTRO_REVEAL_DURATION = OUTRO_DURATION * 0.65;
+    const OUTRO_DURATION =
+      BG_RETURN_DURATION * 5.5;
+
+    const OUTRO_REVEAL_DURATION =
+      OUTRO_DURATION * 0.65;
 
     const OUTRO_REVEAL_OVERLAP = 0.22;
 
-    const OUTRO_REVEAL_START = at(STORY_BASE_UNITS + OUTRO_REVEAL_OVERLAP);
+    const OUTRO_REVEAL_START = at(
+      STORY_BASE_UNITS + OUTRO_REVEAL_OVERLAP
+    );
 
     tl.set(
       outroViewport, {
         autoAlpha: 1,
       },
-      OUTRO_REVEAL_START,
+      OUTRO_REVEAL_START
     );
 
     tl.fromTo(
@@ -1288,7 +1400,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         immediateRender: false,
         scale: 0.7,
       },
-      OUTRO_REVEAL_START,
+      OUTRO_REVEAL_START
     );
 
     tl.to(
@@ -1296,7 +1408,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         autoAlpha: 1,
         duration: 0.001,
       },
-      OUTRO_REVEAL_START,
+      OUTRO_REVEAL_START
     );
 
     tl.fromTo(
@@ -1308,18 +1420,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         ease: "power1.inOut",
         immediateRender: false,
       },
-      OUTRO_REVEAL_START,
+      OUTRO_REVEAL_START
     );
 
     const OUTRO_HEADER_START = at(
-      STORY_BASE_UNITS + OUTRO_REVEAL_DURATION * 0.5,
+      STORY_BASE_UNITS +
+      OUTRO_REVEAL_DURATION * 0.5
     );
 
     tl.set(
       outroHeader, {
         autoAlpha: 1,
       },
-      OUTRO_HEADER_START,
+      OUTRO_HEADER_START
     );
 
     tl.to(
@@ -1329,11 +1442,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         ease: "power4.out",
         stagger: 0.1,
       },
-      OUTRO_HEADER_START,
+      OUTRO_HEADER_START
     );
   }
 
+  // ==========================================
   // 8. OUTRO
+  // ==========================================
 
   function buildOutro(isMobile) {
     const scene = $(".scene-outro");
@@ -1346,7 +1461,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       !outroWinZoom ||
       !outroHeader
     ) {
-      console.error("Tidak dapat membangun outro.");
       return;
     }
 
@@ -1367,7 +1481,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ease: "power1.inOut",
         immediateRender: false,
       },
-      0.01,
+      0.01
     );
 
     // WINDOW NAYA: Scale 1 -> 6.
@@ -1381,7 +1495,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ease: "power1.inOut",
         immediateRender: false,
       },
-      0.035,
+      0.035
     );
 
     // Window tetap terlihat selama zoom.
@@ -1392,7 +1506,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ease: "power1.inOut",
         immediateRender: false,
       },
-      0.035,
+      0.035
     );
 
     // OUTRO HEADER: Scale 1 -> 3 lalu menghilang.
@@ -1408,11 +1522,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         ease: "power1.inOut",
         immediateRender: false,
       },
-      0.025,
+      0.025
     );
 
-
-    // 1. PRELOCATION POSTER: ZOOM OUT
+    // PRELOCATION POSTER: ZOOM OUT
     if (outroPoster) {
       tl.to(
         outroPoster, {
@@ -1422,11 +1535,11 @@ document.addEventListener("DOMContentLoaded", async () => {
           duration: 0.38,
           ease: "power2.out",
         },
-        0.35,
+        0.35
       );
     }
 
-    // 2. BACKGROUND SHIFT TO THE RIGHT
+    // BACKGROUND SHIFT TO THE RIGHT
     tl.to(
       outroBgZoom, {
         xPercent: 15.5,
@@ -1435,10 +1548,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         duration: 0.25,
         ease: "power1.inOut",
       },
-      0.58,
+      0.58
     );
 
-    // 3. PRELOCATION TEXT REVEAL
+    // PRELOCATION TEXT REVEAL
     const COPY_START = 0.82;
     const COPY_DURATION = 0.1;
     const COPY_STAGGER = 0.09;
@@ -1448,7 +1561,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         outroPosterCopy, {
           autoAlpha: 1,
         },
-        COPY_START,
+        COPY_START
       );
 
       tl.fromTo(
@@ -1461,15 +1574,16 @@ document.addEventListener("DOMContentLoaded", async () => {
           ease: "power3.out",
           immediateRender: false,
         },
-        COPY_START,
+        COPY_START
       );
     }
 
-    // 4. HOLD / GAP BEFORE LOCATION
+    // HOLD / GAP BEFORE LOCATION
     const COPY_END =
       COPY_START +
       COPY_DURATION +
-      Math.max(0, outroCopyLines.length - 1) * COPY_STAGGER;
+      Math.max(0, outroCopyLines.length - 1) *
+      COPY_STAGGER;
 
     const LOCATION_GAP = 0.35;
 
@@ -1483,38 +1597,62 @@ document.addEventListener("DOMContentLoaded", async () => {
         duration: LOCATION_GAP,
         ease: "none",
       },
-      COPY_END,
+      COPY_END
     );
   }
 
+  // ==========================================
   // 9. LOCATION WORK SECTION
-  function buildLocationSection() {
+  // ==========================================
+
+  function buildLocationSection(footerReveal = null) {
     const section = $(".location-section");
 
-    if (!section) {
-      console.warn("Location section tidak ditemukan.");
-      return;
-    }
+    if (!section) return;
 
     const stage = $(".location-stage", section);
-    const workItem = $(".location-work-item", section);
-    const backgroundImage = $(".location-image img", workItem);
+
+    const workItem = $(
+      ".location-work-item",
+      section
+    );
+
+    const backgroundImage = $(
+      ".location-image img",
+      workItem
+    );
 
     const photoCards = gsap.utils.toArray(
       ".location-photo-container",
-      workItem,
+      workItem
     );
 
     const photoImages = gsap.utils.toArray(
       ".location-photo-container img",
-      workItem,
+      workItem
     );
 
-    const overlay = $(".location-item-overlay", workItem);
+    const overlay = $(
+      ".location-item-overlay",
+      workItem
+    );
 
     const title = $(".location-title", workItem);
 
-    const titleLines = gsap.utils.toArray("[data-location-line]", title);
+    const headingTimeLines = gsap.utils.toArray(
+      ".location-heading [data-location-line], .location-time [data-location-line]",
+      title
+    );
+
+    const addressLines = gsap.utils.toArray(
+      ".location-address [data-location-line]",
+      title
+    );
+
+    const allTitleLines = [
+      ...headingTimeLines,
+      ...addressLines,
+    ];
 
     if (
       !stage ||
@@ -1523,30 +1661,34 @@ document.addEventListener("DOMContentLoaded", async () => {
       photoCards.length !== 3 ||
       !overlay ||
       !title ||
-      !titleLines.length
+      !allTitleLines.length
     ) {
-      console.warn("Struktur location section belum lengkap.");
-
       return;
     }
-
     // GHOST SCROLL
     $(".location-ghost-container", section)?.remove();
 
-    const ghostContainer = document.createElement("div");
+    const ghostContainer =
+      document.createElement("div");
 
-    ghostContainer.className = "location-ghost-container";
+    ghostContainer.className =
+      "location-ghost-container";
 
-    ghostContainer.setAttribute("aria-hidden", "true");
+    ghostContainer.setAttribute(
+      "aria-hidden",
+      "true"
+    );
 
-    const ghostItem = document.createElement("div");
+    const ghostItem =
+      document.createElement("div");
 
     ghostItem.className = "location-ghost-item";
+
     ghostItem.style.height = "300vh";
 
     ghostContainer.appendChild(ghostItem);
-    section.appendChild(ghostContainer);
 
+    section.appendChild(ghostContainer);
 
     // INITIAL STATE
     gsap.set(stage, {
@@ -1585,7 +1727,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       autoAlpha: 0,
     });
 
-    gsap.set(titleLines, {
+    gsap.set(allTitleLines, {
       yPercent: 125,
       rotation: 2.5,
     });
@@ -1596,7 +1738,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       scrub: 1.2,
       start: "top bottom",
 
-      // Durasi swipe lebih panjang dan lebih lambat.
       end: () =>
         `+=${Math.round(window.innerHeight * 1.35)}`,
 
@@ -1671,11 +1812,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         autoAlpha: 1,
         duration: 0.01,
       },
-      0,
+      0
     );
 
+    // TAHAP 1: Heading, tanggal, dan waktu
     titleReveal.fromTo(
-      titleLines, {
+      headingTimeLines, {
         yPercent: 125,
         rotation: 2.5,
       }, {
@@ -1686,8 +1828,71 @@ document.addEventListener("DOMContentLoaded", async () => {
         ease: "power3.out",
         immediateRender: false,
       },
-      0.19,
+      0.39
     );
+
+    // TAHAP 2: Informasi alamat
+    titleReveal.fromTo(
+      addressLines, {
+        yPercent: 125,
+        rotation: 2.5,
+      }, {
+        yPercent: 0,
+        rotation: 0,
+        duration: 1.2,
+        stagger: 0.08,
+        ease: "power3.out",
+        immediateRender: false,
+      },
+      ">+=0.2"
+    );
+
+    let addressRevealComplete = false;
+
+    const footerScrollTrigger = ScrollTrigger.create({
+      trigger: ghostItem,
+
+      start: "92% top",
+      end: "bottom top",
+
+      invalidateOnRefresh: true,
+
+      onEnter: () => {
+        if (addressRevealComplete) {
+          footerReveal?.play(0);
+        }
+      },
+
+      onLeave: () => {
+        if (addressRevealComplete) {
+          footerReveal?.play();
+        }
+      },
+
+      onEnterBack: () => {
+        if (addressRevealComplete) {
+          footerReveal?.restart();
+        }
+      },
+
+      onLeaveBack: () => {
+        footerReveal?.reverse();
+      },
+    });
+
+    // Tunggu sampai seluruh teks alamat selesai muncul.
+    titleReveal.eventCallback("onComplete", () => {
+      addressRevealComplete = true;
+
+      // Jika pengguna sudah melewati atau sedang berada
+      // dalam area trigger, tampilkan footer.
+      if (
+        footerScrollTrigger.isActive ||
+        footerScrollTrigger.progress > 0
+      ) {
+        footerReveal?.play(0);
+      }
+    });
 
     // PHASE 5: FINAL MOVEMENT
     const stFinal = {
@@ -1705,26 +1910,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+  gsap.to(outroViewport, {
+    clipPath: "inset(0% 0% 100% 0%)",
+    ease: "none",
+
+    scrollTrigger: {
+      trigger: section,
+      start: "top bottom",
+      end: "top 20%",
+      scrub: 1.2,
+      invalidateOnRefresh: true,
+    },
+  });
+
   // ==========================================
   // STICKY LOCATION FOOTER
   // ==========================================
+
   function buildLocationFooter() {
-    const section = $(".location-section");
     const footer = $(".location-sticky-footer");
 
-    if (!section || !footer) {
-      console.warn("Location footer tidak ditemukan.");
-      return;
-    }
+    if (!footer) return null;
 
-    // Kondisi awal: tersembunyi di bawah layar.
+    // Kondisi awal: tersembunyi.
     gsap.set(footer, {
       autoAlpha: 0,
       y: 35,
     });
 
-    // Animasi masuk.
-    const footerReveal = gsap.to(footer, {
+    // Kembalikan tween dalam kondisi paused.
+    return gsap.to(footer, {
       autoAlpha: 1,
       y: 0,
       duration: 0.5,
@@ -1732,33 +1947,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       paused: true,
     });
 
-    // Tampilkan setelah location section mencapai bagian akhir.
-    ScrollTrigger.create({
-      trigger: section,
-      start: "bottom bottom",
-      end: "bottom top",
-
-      invalidateOnRefresh: true,
-
-      onEnter: () => {
-        footerReveal.play();
-      },
-
-      onLeave: () => {
-        footerReveal.play();
-      },
-
-      onEnterBack: () => {
-        footerReveal.play();
-      },
-
-      onLeaveBack: () => {
-        footerReveal.reverse();
-      },
-    });
   }
-
+  // ==========================================
   // 10. START ALL SCENES
+  // ==========================================
+
   function startScenes() {
     const required = [
       ".scene-hero",
@@ -1771,24 +1964,26 @@ document.addEventListener("DOMContentLoaded", async () => {
       ".location-section",
     ];
 
-    const missing = required.filter((selector) => !$(selector));
+    const missing = required.filter(
+      (selector) => !$(selector)
+    );
 
     if (missing.length) {
-      console.error("Scene tidak lengkap. Periksa selector HTML:", missing);
-
       lenis.start();
       return;
     }
 
     try {
-      console.log("[SCENE] Starting scene initialization...");
-
       // Word-fill hanya untuk hero.
-      const heroFills = splitWordFills($(".scene-hero .scene-copy h2"));
+      const heroFills = splitWordFills(
+        $(".scene-hero .scene-copy h2")
+      );
 
-      gsap.set($(".scene-hero .scene-copy"), {
-        autoAlpha: 0,
-      });
+      gsap.set(
+        $(".scene-hero .scene-copy"), {
+          autoAlpha: 0,
+        }
+      );
 
       gsap.set(heroFills, {
         opacity: 0,
@@ -1797,23 +1992,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       buildHero(true, heroFills);
       buildIntro(true);
       buildOutro(true);
-      buildLocationSection();
-      buildLocationFooter();
-
-      // Hitung ulang semua posisi setelah seluruh trigger dibuat.
+      const footerReveal = buildLocationFooter();
+      buildLocationSection(footerReveal);
       ScrollTrigger.refresh();
-
-      console.log(
-        "[SCENE] Initialization complete.",
-        "Active ScrollTriggers:",
-        ScrollTrigger.getAll().length,
-      );
-
       lenis.start();
-    } catch (error) {
-      console.error("[SCENE INITIALIZATION ERROR]", error);
-
-      // Jangan biarkan Lenis terkunci ketika terjadi error.
+    } catch (_) {
+      // Pastikan Lenis tidak terkunci jika inisialisasi gagal.
       lenis.start();
     }
   }

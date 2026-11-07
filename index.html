@@ -51,16 +51,17 @@
     <!-- ───────── 1. HERO: zoom in menembus pintu ───────── -->
     <section class="scene scene-hero" aria-label="Cinematic opening">
       <div class="sky-container" aria-hidden="true">
-        <img src="/intro/assets/images/sky-hero-longer.webp" alt="" decoding="async">
+        <img src="/intro/assets/images/sky-hero-longer.webp" alt="" fetchpriority="high" loading="eager"
+          decoding="async">
       </div>
       <div class="cloud-container cloud-back" aria-hidden="true">
-        <img src="/intro/assets/images/clouds2.webp" alt="" decoding="async">
+        <img src="/intro/assets/images/clouds2.webp" alt="" fetchpriority="high" loading="eager" decoding="async">
       </div>
       <div class="cloud-container cloud-front" aria-hidden="true">
-        <img src="/intro/assets/images/clouds.webp" alt="" decoding="async">
+        <img src="/intro/assets/images/clouds.webp" alt="" fetchpriority="high" loading="eager" decoding="async">
       </div>
       <div class="window-container" aria-hidden="true">
-        <img src="/intro/assets/images/mainhero.webp" alt="" decoding="async">
+        <img src="/intro/assets/images/mainhero.webp" alt="" fetchpriority="high" loading="eager" decoding="async">
       </div>
       <div class="scene-header hero-header">
         <div class="col">
@@ -276,7 +277,8 @@
               <h2 class="location-heading">
                 <span class="location-line-mask">
                   <span class="location-line" data-location-line>
-                    <i>Tasyakuran</i> Pernikahan
+                    <i>Tasyakuran</i>
+                    Pernikahan
                     <br>
                     &lpar; 22-11-2026&rpar;
                   </span>
@@ -323,11 +325,9 @@
     </section>
     <!-- STICKY LOCATION FOOTER -->
     <footer class="location-sticky-footer">
-      <a class="location-map-button"
-        href="https://maps.app.goo.gl/kt1Uycjn8BgH9jPq8"
-        target="_blank" rel="noopener noreferrer" aria-label="Buka lokasi acara di Google Maps">
+      <a class="location-map-button" href="https://maps.app.goo.gl/kt1Uycjn8BgH9jPq8" target="_blank"
+        rel="noopener noreferrer" aria-label="Buka lokasi acara di Google Maps">
         <span>Lihat Lokasi di Google Maps</span>
-
         <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8"
           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M12 21s7-5.5 7-12a7 7 0 1 0-14 0c0 6.5 7 12 7 12Z" />
@@ -342,7 +342,8 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/CustomEase.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.15/dist/SplitText.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@lottiefiles/dotlottie-wc@latest/dist/dotlottie-wc.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@lottiefiles/dotlottie-wc@latest/dist/dotlottie-wc.js">
+  </script>
   <script type="module" src="guest.js"></script>
   <script src="script.js"></script>
 </body>

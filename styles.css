@@ -264,15 +264,19 @@ main {
 }
 
 .scene-header h1 {
-  width: 70%;
+  width: 65%;
+  max-width: 100%;
   font-family: 'Instrument Serif', serif;
-  font-size: clamp(0.4rem, 6.8vw, 1.2rem);
+  font-size: clamp(0.75rem, 6.8vw, 1.2rem);
   color: var(--light);
   font-weight: 400;
-  line-height: 1;
-  letter-spacing: 0.02em;
+  line-height: 1.15;
+  letter-spacing: 0.015em;
   text-transform: none;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
 }
 
 .scene-header h6 {
@@ -923,6 +927,7 @@ main {
   align-items: center;
   gap: 8px;
   z-index: 1;
+
 }
 
 .location-photo-container {
@@ -938,6 +943,7 @@ main {
 .location-photo-container img {
   object-position: center;
   will-change: transform;
+  border-radius: 8px;
 }
 
 /* =====   LOCATION TITLE   ===== */
@@ -987,10 +993,12 @@ main {
   flex-direction: column;
   width: 100%;
   max-width: 38ch;
+  margin-top: 6.5rem;
+
   font-family: 'Manrope', sans-serif;
   font-size: clamp(0.95rem, 3.2vw, 1.25rem);
   font-weight: 350;
-  line-height: 1.5;
+  line-height: 1.35;
   text-align: left;
 }
 
@@ -1008,7 +1016,8 @@ main {
 
 .location-accent {
   margin-bottom: 0.35rem;
-  margin-top: 6.5rem;
+  margin-top: 0;
+  line-height: 2;
   color: #7dd8ff;
   font-weight: 700;
   letter-spacing: 6px;
@@ -1092,16 +1101,12 @@ main {
 .outro-overlay-window {
   position: absolute;
   inset: 0;
-
   width: 100%;
   height: 100%;
-
   left: 0;
   right: auto;
-
   margin: 0;
   transform: none;
-
   overflow: hidden;
   z-index: 2;
 }
@@ -1348,4 +1353,35 @@ main {
 .location-map-button:hover {
   background: #fff;
   color: #000;
+}
+
+.sky-container,
+.cloud-container,
+.window-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sky-container img,
+.cloud-container img,
+.window-container img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  backface-visibility: hidden;
+}
+
+.cloud-back,
+.cloud-front {
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0);
+}
+
+.sky-container,
+.window-container {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
 }

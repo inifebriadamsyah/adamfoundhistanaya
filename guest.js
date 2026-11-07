@@ -19,8 +19,9 @@ window.guestReady = (async () => {
 
   // DATA TAMU
   const theGuests = {
-    "demo-andi": "Bapak Andi",
-    "pegawai-kantor": "Pegawai di Kantor",
+    "demo-andi": "Wempy Ananta Gordon",
+    "pegawai-kantor": "Keluarga Besar Kantor Kemenag Kota Madiun",
+    "pimpinan-kantor": "Pimpinan Kantor Kemenag Kota Madiun",
     "audy-instania-narita": "Audy Instania Narita",
     "nadia-nabila-salma": "Nadia Nabila Salma",
     "syafriaz-zulfa-m": "Syafriaz Zulfa M.",
