@@ -1,0 +1,1124 @@
+/* Font dimuat lewat <link> di index.html (lebih cepat daripada @import). */
+
+:root {
+  --light: #e3e3db;
+  --dark: #0b0b0b;
+  --sky-fallback: #2c8ee4;
+  --hud: #7ecf7e;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: clip;
+  background: var(--dark);
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
+}
+
+body {
+  font-family: "Manrope", sans-serif;
+  color: var(--dark);
+}
+
+img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ───────────── Preloader ───────────── */
+.preloader {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--dark);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  z-index: 1000;
+  will-change: clip-path;
+}
+
+.progress-bar {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: var(--light);
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+}
+
+.preloader-images {
+  position: absolute;
+  top: 47.5%;
+  left: 50%;
+  width: min(22rem, 72vw);
+  height: min(22rem, 72vw);
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  will-change: clip-path;
+  border-radius: 16px 16px 0px 0px ;
+}
+
+.preloader-images .img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+  will-change: clip-path;
+}
+
+.preloader-images .img img {
+  transform: scale(2);
+  will-change: transform;
+}
+
+.preloader-copy {
+  position: absolute;
+  bottom: clamp(2rem, 8vh, 5rem);
+  left: 50%;
+  width: min(30rem, 82vw);
+  transform: translateX(-50%);
+  color: var(--light);
+}
+
+.preloader-copy p {
+  text-align: center;
+  text-transform: none;
+  font-size: clamp(0.55rem, 0.8vw, 0.8rem);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.preloader-copy .line {
+  position: relative;
+  display: block;
+  will-change: transform;
+}
+
+/* Berada di luar .preloader supaya tetap terlihat setelah preloader menutup. */
+.preloader-header {
+  position: fixed;
+  top: 60dvh;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 0.95;
+  transform-origin: center top;
+  -webkit-transform-origin: center top;
+  z-index: 1100;
+  pointer-events: none;
+  white-space: nowrap;
+  will-change: top, transform;
+}
+
+.preloader-header a {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  text-transform: none;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(2.5rem, 7.5vw, 7.5rem);
+  font-weight: 500;
+  line-height: 0.95;
+  text-align: center;
+  text-shadow: 0 1px 12px rgb(0 0 0 / 22%);
+  padding: 0;
+  margin: 0;
+  font-kerning: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.preloader-header .char {
+  position: relative;
+  display: inline-block;
+  line-height: 0.95;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform;
+}
+
+.preloader-header .char-mask {
+  overflow: hidden;
+}
+
+/* ───────────── Scene sinematik (dipakai .scene-hero & .scene-outro) ───────────── */
+.scene {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  isolation: isolate;
+  perspective: 1000px;
+  background: var(--sky-fallback);
+  color: var(--light);
+}
+
+.scene .sky-container,
+.scene .cloud-container,
+.scene .window-container,
+.scene .scene-header,
+.scene .scene-copy {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.scene .sky-container {
+  height: 350dvh;
+  z-index: 1;
+  will-change: transform;
+}
+
+.scene .cloud-container {
+  width: 250%;
+  height: 175dvh;
+  left: -75%;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.scene .cloud-back {
+  z-index: 2;
+  opacity: 0.8;
+  transform: scaleX(-1);
+}
+
+.scene .cloud-front {
+  z-index: 3;
+  opacity: 0.95;
+}
+
+.scene .window-container {
+  height: 100dvh;
+  z-index: 4;
+  transform-origin: center center;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.scene .scene-header {
+  height: 100dvh;
+  padding: 2rem;
+  display: flex;
+  z-index: 5;
+  transform-style: preserve-3d;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.scene-header .col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+
+.scene-header .col p {
+  width: 50%;
+  font-size: clamp(0.8rem, 1.35vw, 1.35rem);
+  line-height: 1.1;
+}
+
+.scene-header .col:nth-child(2) {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.scene-header h1 {
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+.scene-header h6 {
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(1.5rem, 6vw, 3rem);
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+/* SplitText membungkus baris dengan mask; reveal harus tetap ter-clip. */
+.scene-header .line {
+  position: relative;
+  display: block;
+  will-change: transform;
+}
+
+.scene-header .line-mask {
+  overflow: hidden;
+}
+
+/* Judul tengah + indikator scroll (hanya hero). */
+.scene-hero .hero-center {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  gap: clamp(0.6rem, 2vh, 1.35rem);
+  padding: 1.25rem;
+  margin-top: 8rem;
+  text-align: center;
+  color: var(--light);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.hero-scroll-cue {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-top: clamp(1.1rem, 3vh, 2.2rem);
+  color: rgba(255, 255, 255, 0.9);
+  font: 0.88rem/1 "Instrument Serif", serif;
+  text-shadow: 0 1px 12px rgb(0 0 0 / 22%);
+}
+
+.hero-scroll-cue .scroll-track {
+  position: relative;
+  width: 1px;
+  height: 44px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.hero-scroll-cue .scroll-track::after {
+  content: "";
+  position: absolute;
+  top: -45%;
+  left: 0;
+  width: 1px;
+  height: 45%;
+  background: #fff;
+  animation: hero-scroll-drop 1.45s cubic-bezier(0.72, 0, 0.25, 1) infinite;
+}
+
+@keyframes hero-scroll-drop {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+
+  18% {
+    opacity: 1;
+  }
+
+  78% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(150px);
+    opacity: 0;
+  }
+}
+
+/* Teks yang "menyala" kata demi kata. */
+.scene .scene-copy {
+  height: 100dvh;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 6;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.scene-copy h2 {
+  width: min(85%, 1000px);
+  margin: 0;
+  font-family: "Instrument Serif", serif;
+  font-size: clamp(1.55rem, 3.2vw, 3.5rem);
+  font-weight: 400;
+  line-height: 1.1;
+  text-align: center;
+  text-transform: none;
+}
+
+.scene-copy .gradient-word {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.scene-copy .word-shadow {
+  color: rgb(227 227 219 / 35%);
+}
+
+.scene-copy .word-fill {
+  position: absolute;
+  inset: 0 auto auto 0;
+  color: #fff;
+  opacity: 0;
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow: 0 0 14px rgb(255 255 255 / 8%);
+}
+
+/* ───────────── Intro section ───────────── */
+.intro-section {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  isolation: isolate;
+  /* Warna langit: kalau ada celah tipis di atas gambar, menyatu dengan langit. */
+  background: var(--sky-fallback);
+}
+
+/* Desktop: lebar 200% (dua layar) untuk pan kiri -> kanan, tinggi = layar. */
+.intro-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: auto;
+  aspect-ratio: 2986 / 3300;
+  z-index: 0;
+  will-change: transform;
+}
+
+.intro-bg picture {
+  position: absolute;
+  inset: 0;
+}
+
+.intro-bg img {
+  object-fit: cover;
+  object-position: left bottom;
+}
+
+/* Panel kartu */
+.intro-panel {
+  position: absolute;
+  top: 1.5rem;
+  z-index: 2;
+  font-family: "JetBrains Mono", monospace;
+}
+
+.intro-panel--bride {
+  left: 1.5rem;
+  text-align: left;
+}
+
+.intro-panel--groom {
+  right: 1.5rem;
+  text-align: left;
+}
+
+.intro-panel--groom .intro-card {
+  margin-left: auto;
+}
+
+/* ───────────── Kartu HUD sci-fi ───────────── */
+.intro-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: clamp(300px, 30vw, 380px);
+  background: rgba(7, 11, 7, 0.245);
+  border: 1px solid rgba(120, 200, 120, 0.35);
+  opacity: 0;
+}
+
+/* Sudut HUD: kiri-atas & kanan-bawah di .intro-card, kanan-atas & kiri-bawah di .intro-card-inner. */
+.intro-card::before,
+.intro-card::after,
+.intro-card-inner::before,
+.intro-card-inner::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 0 solid var(--hud);
+  pointer-events: none;
+}
+
+.intro-card::before {
+  top: -1px;
+  left: -1px;
+  border-width: 2px 0 0 2px;
+}
+
+.intro-card::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 2px 2px 0;
+}
+
+.intro-card-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.intro-card-inner::before,
+.intro-card-inner::after {
+  z-index: 10;
+}
+
+.intro-card-inner::before {
+  top: -1px;
+  right: -1px;
+  border-width: 2px 2px 0 0;
+}
+
+.intro-card-inner::after {
+  bottom: -1px;
+  left: -1px;
+  border-width: 0 0 2px 2px;
+}
+
+.intro-card-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.75);
+  border-bottom: 1px solid rgba(120, 200, 120, 0.25);
+}
+
+.intro-card-status-dot {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--hud);
+  box-shadow: 0 0 6px var(--hud);
+  animation: hud-blink 2s ease-in-out infinite;
+}
+
+@keyframes hud-blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.intro-card-status-text {
+  font-size: clamp(0.62rem, 1vw, 0.78rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--hud);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.intro-photo-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 6 / 5;
+  overflow: hidden;
+  clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);
+  border-bottom: 1px solid rgba(120, 200, 120, 0.25);
+}
+
+.intro-photo-wrap img {
+  object-position: center top;
+  filter: grayscale(100%) contrast(1.05);
+  transform: scale(1.08);
+}
+
+/* Garis scan halus di atas foto */
+.intro-photo-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg,
+      transparent,
+      transparent 3px,
+      rgba(0, 0, 0, 0.08) 3px,
+      rgba(0, 0, 0, 0.08) 4px);
+}
+
+/* Grid di atas foto */
+.intro-photo-scan {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(120, 200, 120, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 200, 120, 0.04) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.intro-photo-scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  height: 2px;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, rgba(120, 200, 120, 0.6), transparent);
+}
+
+.intro-card-data {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 10px 10px 12px;
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.intro-card-id {
+  margin-bottom: 2px;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(180, 210, 180, 0.6);
+  opacity: 0;
+  white-space: nowrap;
+}
+
+.intro-card-id span {
+  color: var(--light);
+  font-weight: 700;
+}
+
+.intro-name {
+  margin: 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: clamp(0.8rem, 1.45vw, 1.08rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.015em;
+  text-transform: uppercase;
+  color: var(--light);
+  opacity: 0;
+  white-space: nowrap;
+}
+
+.intro-data-row {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  gap: 0.4rem;
+  min-width: 0;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.intro-data-label {
+  flex: 0 0 auto;
+  font-size: clamp(0.68rem, 0.8vw, 0.72rem);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: rgba(180, 210, 180, 0.55);
+  white-space: nowrap;
+}
+
+.intro-data-value {
+  min-width: 0;
+  font-size: clamp(0.75rem, 1vw, 0.82rem);
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--light);
+  white-space: nowrap;
+}
+
+/* ───────────── Mobile ───────────── */
+@media (max-width: 767px) {
+  .preloader-images {
+    top: 46.5%;
+    width: min(15rem, 58vw);
+    height: min(15rem, 58vw);
+  }
+
+  .preloader-copy {
+    width: 82%;
+    bottom: 2.5rem;
+  }
+
+  .preloader-header a {
+    font-size: clamp(2.25rem, 8vw, 3rem);
+  }
+
+  .scene .scene-header {
+    padding: 1.78rem 1.4rem 1.5rem;
+  }
+
+  .scene-header h1 {
+    width: 70%;
+    font-size: clamp(0.4rem, 6.8vw, 1.2rem);
+    letter-spacing: 0.02em;
+  }
+
+  .scene-header .col h6 {
+    width: 88%;
+    font-size: 0.75rem;
+  }
+
+  .scene-header .col p {
+    width: 88%;
+    font-size: 0.65rem;
+  }
+
+  .scene .scene-copy {
+    padding: 2.25rem;
+  }
+
+  .scene-copy h2 {
+    width: 94%;
+    font-size: clamp(1.45rem, 5.2vw, 2rem);
+    line-height: 1.35;
+  }
+
+  /* Gambar intro: 3x lebar layar (tampil 1/3 kiri dulu), tinggi mengikuti rasio 2896x6000.
+     Menempel di bawah: y = 0 selalu berarti dasar gambar (tembok) sejajar dasar layar,
+     jadi tidak ada celah walau tinggi layar berubah saat address bar naik/turun. */
+  .intro-bg {
+    top: auto;
+    bottom: 0;
+    width: 300%;
+    height: auto;
+    aspect-ratio: 2896 / 3300;
+  }
+
+  .intro-bg img {
+    object-fit: cover;
+  }
+
+  .intro-panel {
+    top: 40%;
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, -50%);
+  }
+
+  .intro-panel--bride,
+  .intro-panel--groom {
+    left: 50%;
+    right: auto;
+  }
+
+  .intro-card {
+    width: min(48vw, 280px);
+  }
+
+  .intro-card-status-text {
+    font-size: clamp(0.65rem, 2.15vw, 0.72rem);
+    letter-spacing: 0.06em;
+  }
+
+  .intro-name {
+    font-size: clamp(0.68rem, 3vw, 0.92rem);
+    letter-spacing: 0.005em;
+  }
+
+  .intro-data-row {
+    gap: 0.3rem;
+  }
+
+  .intro-data-label {
+    font-size: clamp(0.5rem, 2vw, 0.64rem);
+    letter-spacing: 0.035em;
+  }
+
+  .intro-data-value {
+    font-size: clamp(0.6rem, 2.15vw, 0.7rem);
+    letter-spacing: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+  OUTRO: hanya isi visual yang disembunyikan saat initial load.
+  .scene-outro sendiri TIDAK disembunyikan agar ScrollTrigger
+  tetap dapat mengukur posisi dan tinggi section.
+*/
+.scene-outro .sky-container,
+.scene-outro .cloud-container,
+.scene-outro .window-container,
+.scene-outro .scene-header,
+.scene-outro .scene-copy {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* ==========================================
+   OUTRO OVERLAY
+   Ditempatkan di atas intro-bg, bukan di dalam scene-outro.
+========================================== */
+.outro-overlay-window {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100dvh;
+  z-index: 20;
+  transform-origin: center center;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  pointer-events: none;
+
+  /* Sembunyikan sebelum timeline intro dimulai */
+  opacity: 0;
+  visibility: hidden;
+  background: transparent;
+}
+
+.outro-overlay-window img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.outro-overlay-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100dvh;
+  padding: 2rem;
+  display: flex;
+  z-index: 21;
+  color: var(--light);
+  transform-origin: center center;
+  will-change: transform, opacity;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  background: transparent;
+}
+
+.outro-overlay-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  z-index: 19;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(100%);
+  transform-origin: center center;
+
+  background: #171913;
+  will-change: transform;
+}
+
+.outro-overlay-bg img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 62%;
+}
+
+@media (max-width: 767px) {
+  .outro-overlay-header {
+    padding: 1.78rem 1.4rem 1.5rem;
+  }
+}
+
+.scene.scene-outro {
+  margin-top: 2dvh;
+  background: transparent !important;
+}
+
+
+
+/* ========================================
+   LOCATION SECTION
+======================================== */
+
+.location-section {
+  position: relative;
+  z-index: 30;
+  width: 100%;
+  height: 250vh;
+  background: #050505;
+  color: #fff;
+  isolation: isolate;
+}
+
+.location-stage {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: #050505;
+  isolation: isolate;
+
+  clip-path: inset(100% 0 0 0);
+}
+
+/* IMAGE ROW */
+.location-images {
+  position: absolute;
+  top: 11%;
+  left: 4%;
+  right: 4%;
+
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.5vw;
+
+  align-items: center;
+  z-index: 1;
+}
+
+.location-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #111;
+  will-change: transform;
+}
+
+.location-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* TITLE */
+.location-title {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: 8%;
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  color: #fff;
+  font-family: inherit;
+  font-size: clamp(3.5rem, 8vw, 8rem);
+  font-weight: 600;
+  line-height: 0.9;
+  letter-spacing: -0.055em;
+  text-transform: uppercase;
+}
+
+.location-line-mask {
+  position: relative;
+  overflow: hidden;
+}
+
+.location-line {
+  display: block;
+  will-change: transform;
+}
+
+.location-accent {
+  color: #cde5df;
+}
+
+/* MOBILE */
+@media (max-width: 767px) {
+
+  .location-section {
+    height: 250vh;
+  }
+
+  .location-images {
+    top: 7%;
+    left: 5%;
+    right: 5%;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 16svh);
+    gap: 1.2vh;
+  }
+
+  .location-image {
+    aspect-ratio: auto;
+    height: 16svh;
+  }
+
+  .location-title {
+    left: 5%;
+    right: 5%;
+    bottom: 9%;
+
+    font-size: clamp(2.8rem, 12.5vw, 4.5rem);
+    line-height: 0.92;
+  }
+
+}
+
+/* Outro header memenuhi satu layar */
+.outro-header {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  display: block;
+  pointer-events: none;
+  line-height: 1.15;
+}
+
+/* Nama pasangan berada di tengah layar */
+.outro-header h1 {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  width: max-content;
+  max-width: 90%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+/* Paragraf kiri dan kanan tetap di bawah */
+.outro-header .outro-message,
+.outro-header .outro-signoff {
+  position: absolute;
+  bottom: max(5%, env(safe-area-inset-bottom));
+  margin: 0;
+}
+
+.outro-header .outro-message {
+  left: 5%;
+  text-align: left;
+}
+
+.outro-header .outro-signoff {
+  right: 5%;
+  text-align: right;
+}
+
+@media (max-width: 767px) {
+  .outro-header h1 {
+    width: 90%;
+    font-size: clamp(1.5rem, 6vw, 2rem);
+  }
+
+  .outro-header .outro-message,
+  .outro-header .outro-signoff {
+    font-size: clamp(0.65rem, 2.5vw, 0.85rem);
+    bottom: max(5%, env(safe-area-inset-bottom));
+  }
+
+  .outro-header .outro-message {
+    left: 5%;
+  }
+
+  .outro-header .outro-signoff {
+    right: 5%;
+  }
+}
+
+/* ==========================================
+   INTRO: MOBILE COMPOSITION FOR ALL SCREENS
+========================================== */
+
+.intro-bg {
+  top: auto;
+  bottom: 0;
+  left: 0;
+  width: 300%;
+  height: auto;
+  aspect-ratio: 2896 / 3300;
+}
+
+.intro-bg img {
+  object-fit: cover;
+}
+
+/* Groom dan bride berada di tengah layar */
+.intro-panel,
+.intro-panel--bride,
+.intro-panel--groom {
+  top: 40%;
+  left: 50%;
+  right: auto;
+  transform: translate(-50%, -50%);
+}
+
+.intro-panel--groom .intro-card {
+  margin-left: 0;
+}
+
+/* Ukuran kartu */
+.intro-card {
+  width: min(48vw, 280px);
+}
+
+/* Typography */
+.intro-card-status-text {
+  font-size: clamp(0.65rem, 2.15vw, 0.72rem);
+  letter-spacing: 0.06em;
+}
+
+.intro-name {
+  font-size: clamp(0.68rem, 3vw, 0.92rem);
+  letter-spacing: 0.005em;
+}
+
+.intro-data-row {
+  gap: 0.3rem;
+}
+
+.intro-data-label {
+  font-size: clamp(0.5rem, 2vw, 0.64rem);
+  letter-spacing: 0.035em;
+}
+
+.intro-data-value {
+  font-size: clamp(0.6rem, 2.15vw, 0.7rem);
+  letter-spacing: 0;
+}
