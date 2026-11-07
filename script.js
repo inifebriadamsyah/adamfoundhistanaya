@@ -1254,8 +1254,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // OUTRO REVEAL
-
-
     const OUTRO_DURATION = BG_RETURN_DURATION * 5.5;
 
     const OUTRO_REVEAL_DURATION = OUTRO_DURATION * 0.65;
@@ -1680,7 +1678,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       ease: "power3.out",
       immediateRender: false,
     },
-      0,
+      0.19,
     );
 
     // PHASE 5: FINAL MOVEMENT

@@ -848,7 +848,6 @@ main {
 }
 
 /* =====   STICKY STAGE   ===== */
-
 .location-stage {
   position: sticky;
   top: 0;
@@ -862,7 +861,6 @@ main {
 }
 
 /* =====   LOCATION WORK ITEM   ===== */
-
 .location-work-item {
   position: fixed;
   top: 0;
@@ -945,7 +943,7 @@ main {
 /* =====   LOCATION TITLE   ===== */
 .location-title {
   position: absolute;
-  top: 55%;
+  top: 58%;
   left: 6%;
   right: 6%;
   transform: translateY(-50%);
@@ -1224,12 +1222,12 @@ main {
 }
 
 .hero-parallax-row--top span {
-  font-size: clamp(2.65rem, 9vw, 3.5rem);
+  font-size: clamp(2.25rem, 9vw, 3.5rem);
   font-style: italic;
 }
 
 .hero-parallax-row--bottom span {
-  font-size: clamp(2rem, 7.5vw, 3rem);
+  font-size: clamp(1.65rem, 7.5vw, 3rem);
   letter-spacing: 0.025em;
   font-weight: 400;
   font-family: 'Instrument Serif', serif;
@@ -1299,12 +1297,9 @@ main {
   position: fixed;
   left: 50%;
   bottom: 0;
-
   width: min(100vw, var(--site-width));
-
   display: flex;
   justify-content: center;
-
   padding: 14px 16px
     calc(14px + env(safe-area-inset-bottom));
 
@@ -1315,13 +1310,10 @@ main {
   );
 
   transform: translateX(-50%);
-
   z-index: 100;
-
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-
   will-change: transform, opacity;
 }
 
@@ -1330,28 +1322,20 @@ main {
   align-items: center;
   justify-content: center;
   gap: 10px;
-
   width: 100%;
   min-height: 50px;
-
-  padding: 12px 20px;
-
+  padding: 12px 0px;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 999px;
-
+  border-radius: 8px;
   background: var(--light);
   color: var(--dark);
-
   font-family: 'Manrope', sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.015em;
-
   text-decoration: none;
   text-align: center;
-
   pointer-events: auto;
-
   transition:
     background 0.3s ease,
     color 0.3s ease;
