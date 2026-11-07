@@ -871,7 +871,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // VERTICAL MOVEMENT
         tl.to(
           coupleParallax, {
-            y: () => -scene.clientHeight * 0.85,
+            y: () => -scene.clientHeight * 1.06,
             duration: parallaxDuration,
             ease: "none",
           },
