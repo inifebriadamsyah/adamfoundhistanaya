@@ -945,7 +945,7 @@ main {
 /* =====   LOCATION TITLE   ===== */
 .location-title {
   position: absolute;
-  top: 76%;
+  top: 55%;
   left: 6%;
   right: 6%;
   transform: translateY(-50%);
@@ -977,7 +977,7 @@ main {
 .location-title .location-time {
   margin: 0;
   font-family: 'Manrope', sans-serif;
-  font-size: clamp(1.35rem, 3vw, 1.25rem);
+  font-size: clamp(1.25rem, 3vw, 1.35rem);
   font-weight: 600;
   line-height: 1.5;
   text-align: left;
@@ -990,7 +990,7 @@ main {
   width: 100%;
   max-width: 38ch;
   font-family: 'Manrope', sans-serif;
-  font-size: clamp(1.05rem, 3.2vw, 1.19rem);
+  font-size: clamp(0.95rem, 3.2vw, 1.25rem);
   font-weight: 350;
   line-height: 1.5;
   text-align: left;
@@ -1010,7 +1010,7 @@ main {
 
 .location-accent {
   margin-bottom: 0.35rem;
-  margin-top: 2rem;
+  margin-top: 6.5rem;
   color: #7dd8ff;
   font-weight: 700;
   letter-spacing: 6px;

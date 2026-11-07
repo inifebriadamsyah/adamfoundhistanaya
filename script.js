@@ -939,7 +939,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         c.scan, {
         autoAlpha: 1,
         top: "100%",
-        duration: 0.24,
+        duration: 0.44,
         ease: "none",
       },
         at(t.scan),
