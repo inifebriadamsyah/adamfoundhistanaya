@@ -18,7 +18,7 @@ window.guestReady = (async () => {
   ).trim().toLowerCase();
 
   // DATA TAMU
-  const demoGuests = {
+  const theGuests = {
     "demo-andi": "Bapak Andi",
     "pegawai-kantor": "Pegawai di Kantor",
     "audy-instania-narita": "Audy Instania Narita",
@@ -27,7 +27,7 @@ window.guestReady = (async () => {
   };
 
   // Cari nama penerima.
-  const guestName = demoGuests[guestSlug] || "Tamu Undangan";
+  const guestName = theGuests[guestSlug] || "Tamu Undangan";
 
   // Tampilkan nama pada hero.
   guestHeading.textContent = guestName;
