@@ -9,6 +9,14 @@ window.addEventListener("pageshow", () => {
 });
 
 document.addEventListener("DOMContentLoaded", async () => {
+  if (window.guestReady) {
+    try {
+      await window.guestReady;
+    } catch (error) {
+      console.error("Guest loading error:", error);
+    }
+  }
+
   if (document.fonts?.ready) await document.fonts.ready;
 
   gsap.registerPlugin(ScrollTrigger, CustomEase, SplitText);
@@ -158,11 +166,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   preloaderImages.forEach((image, index) => {
     introTimeline.to(
       image, {
-      clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-      duration: 1,
-      ease: "hop",
-      delay: index * 0.75,
-    },
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        duration: 1,
+        ease: "hop",
+        delay: index * 0.75,
+      },
       "-=5",
     );
   });
@@ -170,154 +178,154 @@ document.addEventListener("DOMContentLoaded", async () => {
   preloaderImagesInner.forEach((image, index) => {
     introTimeline.to(
       image, {
-      scale: 1,
-      duration: 1.5,
-      ease: "hop",
-      delay: index * 0.75,
-    },
+        scale: 1,
+        duration: 1.5,
+        ease: "hop",
+        delay: index * 0.75,
+      },
       "-=5.25",
     );
   });
 
   introTimeline.to(
     lines, {
-    yPercent: 0,
-    duration: 2,
-    ease: "hop",
-    stagger: 0.1,
-  },
+      yPercent: 0,
+      duration: 2,
+      ease: "hop",
+      stagger: 0.1,
+    },
     "-=5.5",
   );
 
   introTimeline.to(
     chars, {
-    yPercent: 0,
-    duration: 1,
-    ease: "hop",
-    stagger: 0.025,
-  },
+      yPercent: 0,
+      duration: 1,
+      ease: "hop",
+      stagger: 0.025,
+    },
     "-=5",
   );
 
   introTimeline.to(
     ".preloader-images", {
-    clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
-    duration: 1,
-    ease: "hop",
-  },
+      clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+      duration: 1,
+      ease: "hop",
+    },
     "-=1.5",
   );
 
   introTimeline.to(
     lines, {
-    y: "-125%",
-    duration: 2,
-    ease: "hop",
-    stagger: 0.1,
-  },
+      y: "-125%",
+      duration: 2,
+      ease: "hop",
+      stagger: 0.1,
+    },
     "-=2",
   );
 
   // Logo animation.
   introTimeline.to(
     chars, {
-    yPercent: (index) => {
-      if (index === 0 || index === chars.length - 1) {
-        return 0;
-      }
-
-      return index % 2 === 0 ? 100 : -100;
-    },
-
-    duration: 1,
-    ease: "hop",
-    stagger: 0.025,
-    delay: 0.5,
-
-    onStart: () => {
-      if (!initialChar || !lastChar) return;
-
-      [initialChar, lastChar].forEach((char) => {
-        const mask = char.parentElement;
-
-        if (mask?.classList.contains("char-mask")) {
-          mask.style.overflow = "visible";
+      yPercent: (index) => {
+        if (index === 0 || index === chars.length - 1) {
+          return 0;
         }
-      });
 
-      gsap.set([initialChar, lastChar], {
-        y: 0,
-        yPercent: 0,
-      });
+        return index % 2 === 0 ? 100 : -100;
+      },
 
-      requestAnimationFrame(() => {
-        const centerX = document.documentElement.clientWidth / 2;
+      duration: 1,
+      ease: "hop",
+      stagger: 0.025,
+      delay: 0.5,
 
-        const firstRect = initialChar.getBoundingClientRect();
+      onStart: () => {
+        if (!initialChar || !lastChar) return;
 
-        const lastRect = lastChar.getBoundingClientRect();
+        [initialChar, lastChar].forEach((char) => {
+          const mask = char.parentElement;
 
-        const firstX = centerX - firstRect.left - firstRect.width;
-
-        const lastX = centerX - lastRect.left;
-
-        gsap.to([initialChar, lastChar], {
-          x: (index) => (index === 0 ? firstX : lastX),
-          duration: 1,
-          delay: 0.5,
-          ease: "hop",
-
-          onComplete: () => {
-            gsap.to(".preloader-header", {
-              top: "1.85rem",
-              y: 0,
-              scale: 0.54,
-              zIndex: 1101,
-              mixBlendMode: "normal",
-              duration: 1.75,
-              ease: "hop",
-
-              onComplete: () => {
-                logoFinished = true;
-                tryStartScenes();
-              },
-            });
-          },
+          if (mask?.classList.contains("char-mask")) {
+            mask.style.overflow = "visible";
+          }
         });
-      });
+
+        gsap.set([initialChar, lastChar], {
+          y: 0,
+          yPercent: 0,
+        });
+
+        requestAnimationFrame(() => {
+          const centerX = document.documentElement.clientWidth / 2;
+
+          const firstRect = initialChar.getBoundingClientRect();
+
+          const lastRect = lastChar.getBoundingClientRect();
+
+          const firstX = centerX - firstRect.left - firstRect.width;
+
+          const lastX = centerX - lastRect.left;
+
+          gsap.to([initialChar, lastChar], {
+            x: (index) => (index === 0 ? firstX : lastX),
+            duration: 1,
+            delay: 0.5,
+            ease: "hop",
+
+            onComplete: () => {
+              gsap.to(".preloader-header", {
+                top: "1.85rem",
+                y: 0,
+                scale: 0.54,
+                zIndex: 1101,
+                mixBlendMode: "normal",
+                duration: 1.75,
+                ease: "hop",
+
+                onComplete: () => {
+                  logoFinished = true;
+                  tryStartScenes();
+                },
+              });
+            },
+          });
+        });
+      },
     },
-  },
     "-=2.5",
   );
 
   introTimeline.to(
     ".preloader", {
-    clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
-    duration: 1.75,
-    ease: "hop",
-  },
+      clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+      duration: 1.75,
+      ease: "hop",
+    },
     "-=0.5",
   );
 
   introTimeline.to(
     ".hero-header h6 .line", {
-    yPercent: 0,
-    duration: 1,
-    delay: 0.3,
-    ease: "power4.out",
-    stagger: 0.1,
-  },
+      yPercent: 0,
+      duration: 1,
+      delay: 0.3,
+      ease: "power4.out",
+      stagger: 0.1,
+    },
     "-=0.75",
   );
 
   introTimeline.to(
     ".hero-header h1 .line", {
-    yPercent: 0,
-    duration: 1,
-    delay: 0.3,
-    ease: "power4.out",
-    stagger: 0.1,
-  },
+      yPercent: 0,
+      duration: 1,
+      delay: 0.3,
+      ease: "power4.out",
+      stagger: 0.1,
+    },
     "-=0.75",
   );
 
@@ -501,80 +509,80 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     tl.to(
-      win, {
-      scale: 20,
-      duration: 0.95,
-      ease: "none",
-    },
-      0,
-    )
-      .to(
-        header, {
-        scale: 2,
-        z: 800,
-        duration: 0.5,
-        ease: "none",
-      },
+        win, {
+          scale: 20,
+          duration: 0.95,
+          ease: "none",
+        },
         0,
       )
       .to(
         header, {
-        scale: 9,
-        z: 1000,
-        duration: 0.5,
-        ease: "none",
-      },
+          scale: 2,
+          z: 800,
+          duration: 0.5,
+          ease: "none",
+        },
+        0,
+      )
+      .to(
+        header, {
+          scale: 9,
+          z: 1000,
+          duration: 0.5,
+          ease: "none",
+        },
         0.5,
       )
       .to(
         header, {
-        opacity: 0,
-        duration: 0.15,
-        ease: "none",
-      },
+          opacity: 0,
+          duration: 0.15,
+          ease: "none",
+        },
         0.35,
       )
       .to(
         sky, {
-        y: () => -skyDistance(),
-        duration: 1,
-        ease: "none",
-      },
+          y: () => -skyDistance(),
+          duration: 1,
+          ease: "none",
+        },
         0,
       )
       .to(
         cloudBack, {
-        y: () => -skyDistance() * 0.25,
-        duration: 1,
-        ease: "none",
-      },
+          y: () => -skyDistance() * 0.25,
+          duration: 1,
+          ease: "none",
+        },
         0,
       )
       .to(
         cloudFront, {
-        y: () => -skyDistance() * 0.45,
-        duration: 1,
-        ease: "none",
-      },
+          y: () => -skyDistance() * 0.45,
+          duration: 1,
+          ease: "none",
+        },
         0,
       )
       .to(
         center, {
-        autoAlpha: 0,
-        y: -120,
-        scale: 0.97,
-        duration: 0.45,
-        ease: "none",
-        opacity: 0,
-      },
+          autoAlpha: 0,
+          y: -120,
+          scale: 0.97,
+          duration: 0.45,
+          ease: "none",
+          opacity: 0,
+        },
         t.center,
       )
       .to(
         copy, {
-        autoAlpha: 1,
-        duration: 0.001,
-        ease: "none",
-      },
+          autoAlpha: 1,
+          duration: 0.001,
+          ease: "none",
+        },
         t.copy,
       );
 
@@ -586,10 +594,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     tl.to(
       heroText, {
-      opacity: 1,
-      duration: Math.max(0.12, t.fillStart - t.center),
-      ease: "none",
-    },
+        opacity: 1,
+        duration: Math.max(0.12, t.fillStart - t.center),
+        ease: "none",
+      },
       t.center * 1.2,
     );
 
@@ -597,10 +605,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     fills.forEach((fill, i) => {
       tl.to(
         fill, {
-        opacity: 1,
-        duration: t.fillDur,
-        ease: "none",
-      },
+          opacity: 1,
+          duration: t.fillDur,
+          ease: "none",
+        },
         t.fillStart + (i / denominator) * t.fillLen,
       );
     });
@@ -613,20 +621,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     // CLOUD BACK
     tl.to(
       cloudBack, {
-      y: () => -skyDistance() * 0.25 - window.innerHeight * 0.25,
-      duration: cloudDriftDuration,
-      ease: "none",
-    },
+        y: () => -skyDistance() * 0.25 - window.innerHeight * 0.25,
+        duration: cloudDriftDuration,
+        ease: "none",
+      },
       cloudDriftStart,
     );
 
     // CLOUD FRONT
     tl.to(
       cloudFront, {
-      y: () => -skyDistance() * 0.45 - window.innerHeight * 0.125,
-      duration: cloudDriftDuration,
-      ease: "none",
-    },
+        y: () => -skyDistance() * 0.45 - window.innerHeight * 0.125,
+        duration: cloudDriftDuration,
+        ease: "none",
+      },
       cloudDriftStart,
     );
 
@@ -646,28 +654,28 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       tl.fromTo(
         paperPlane, {
-        autoAlpha: 1,
-        x: planeStartX,
-        y: -400,
-        scale: 1.25,
-        rotation: 7,
-      }, {
-        autoAlpha: 1,
-        x: planeEndX,
-        y: -104,
-        scale: 1.55,
-        rotation: 15,
-        duration: fillEnd - t.fillStart,
-        ease: "none",
-        immediateRender: false,
-      },
+          autoAlpha: 1,
+          x: planeStartX,
+          y: -400,
+          scale: 1.25,
+          rotation: 7,
+        }, {
+          autoAlpha: 1,
+          x: planeEndX,
+          y: -104,
+          scale: 1.55,
+          rotation: 15,
+          duration: fillEnd - t.fillStart,
+          ease: "none",
+          immediateRender: false,
+        },
         t.fillStart,
       );
 
       tl.set(
         paperPlane, {
-        autoAlpha: 0,
-      },
+          autoAlpha: 0,
+        },
         fillEnd,
       );
     }
@@ -675,22 +683,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     // CLOUD FADE
     tl.to(
       [cloudBack, cloudFront], {
-      opacity: 0,
-      duration: cloudFadeDuration * 0.5,
-      ease: "power2.out",
-    },
+        opacity: 0,
+        duration: cloudFadeDuration * 0.5,
+        ease: "power2.out",
+      },
       textExitStart,
     );
 
     // HERO TEXT EXIT
     tl.to(
       heroText, {
-      y: () => -(window.innerHeight + heroText.offsetHeight) * 0.65,
-      autoAlpha: 0,
-      opacity: 0,
-      duration: textExitDuration + 0.75,
-      ease: "power2.out",
-    },
+        y: () => -(window.innerHeight + heroText.offsetHeight) * 0.65,
+        autoAlpha: 0,
+        opacity: 0,
+        duration: textExitDuration + 0.75,
+        ease: "power2.out",
+      },
       textExitStart,
     );
 
@@ -788,30 +796,30 @@ document.addEventListener("DOMContentLoaded", async () => {
         // kemudian bergerak naik melewati layar.
         tl.to(
           coupleParallax, {
-          y: () => -scene.clientHeight * 1.16,
-          duration: parallaxDuration,
-          ease: "none",
-        },
+            y: () => -scene.clientHeight * 1.16,
+            duration: parallaxDuration,
+            ease: "none",
+          },
           parallaxStart
         );
 
         // 5. TOP ROW: MOVE LEFT
         tl.to(
           parallaxTopTrack, {
-          x: () => -scene.clientWidth * 1.2,
-          duration: parallaxDuration,
-          ease: "none",
-        },
+            x: () => -scene.clientWidth * 1.2,
+            duration: parallaxDuration,
+            ease: "none",
+          },
           parallaxStart
         );
 
         // 6. BOTTOM ROW: MOVE RIGHT
         tl.to(
           parallaxBottomTrack, {
-          x: 0,
-          duration: parallaxDuration * 1.1,
-          ease: "none",
-        },
+            x: 0,
+            duration: parallaxDuration * 1.1,
+            ease: "none",
+          },
           parallaxStart
         );
       }
@@ -903,74 +911,74 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function revealCard(tl, c, t, at) {
     tl.to(
-      c.card, {
-      autoAlpha: 1,
-      clipPath: CLIP.visible,
-      duration: 0.72,
-      ease: "hop",
-    },
-      at(t.enter),
-    )
+        c.card, {
+          autoAlpha: 1,
+          clipPath: CLIP.visible,
+          duration: 0.72,
+          ease: "hop",
+        },
+        at(t.enter),
+      )
       .to(
         c.inner, {
-        scale: 1,
-        duration: 0.9,
-        ease: "hop",
-      },
+          scale: 1,
+          duration: 0.9,
+          ease: "hop",
+        },
         at(t.enter),
       )
       .to(
         c.photo, {
-        clipPath: "inset(0% 0% 0% 0%)",
-        duration: 0.3,
-        ease: "hop",
-      },
+          clipPath: "inset(0% 0% 0% 0%)",
+          duration: 0.3,
+          ease: "hop",
+        },
         at(t.photo),
       )
       .to(
         c.img, {
-        scale: 1,
-        duration: 0.55,
-        ease: "hop",
-      },
+          scale: 1,
+          duration: 0.55,
+          ease: "hop",
+        },
         at(t.photo),
       )
       .to(
         c.scan, {
-        autoAlpha: 1,
-        top: "100%",
-        duration: 0.64,
-        ease: "none",
-      },
+          autoAlpha: 1,
+          top: "100%",
+          duration: 0.64,
+          ease: "none",
+        },
         at(t.scan),
       )
       .to(
         c.id, {
-        autoAlpha: 1,
-        y: 0,
-        duration: 0.12,
-        ease: "power2.out",
-      },
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.12,
+          ease: "power2.out",
+        },
         at(t.id),
       )
       .to(
         c.name, {
-        autoAlpha: 1,
-        y: 0,
-        duration: 0.16,
-        ease: "power2.out",
-      },
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.16,
+          ease: "power2.out",
+        },
         at(t.name),
       );
 
     c.rows.forEach((row, i) => {
       tl.to(
         row, {
-        autoAlpha: 1,
-        y: 0,
-        duration: 0.13,
-        ease: "power2.out",
-      },
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.13,
+          ease: "power2.out",
+        },
         at(t.rows + i * 0.1),
       );
     });
@@ -979,18 +987,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   function hideCard(tl, c, t, at) {
     tl.to(
       c.card, {
-      autoAlpha: 0,
-      clipPath: CLIP.hiddenTop,
-      duration: t.exitDur,
-      ease: "hop",
-    },
+        autoAlpha: 0,
+        clipPath: CLIP.hiddenTop,
+        duration: t.exitDur,
+        ease: "hop",
+      },
       at(t.exit),
     ).to(
       c.inner, {
-      scale: 1.16,
-      duration: t.exitDur,
-      ease: "hop",
-    },
+        scale: 1.16,
+        duration: t.exitDur,
+        ease: "hop",
+      },
       at(t.exit),
     );
   }
@@ -1057,10 +1065,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const splitOutroHeader = SplitText.create(
     ".outro-header h1, .outro-header p", {
-    type: "lines",
-    linesClass: "line",
-    mask: "lines",
-  },
+      type: "lines",
+      linesClass: "line",
+      mask: "lines",
+    },
   );
 
   const outroHeaderLines = splitOutroHeader.lines;
@@ -1213,12 +1221,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (leadIn > 0) {
       tl.fromTo(
         bg, {
-        y: () => verticalDistance(),
-      }, {
-        y: 0,
-        duration: leadIn / 0.5,
-        ease: "power4.out",
-      },
+          y: () => verticalDistance(),
+        }, {
+          y: 0,
+          duration: leadIn / 0.5,
+          ease: "power4.out",
+        },
         0,
       );
     }
@@ -1229,10 +1237,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     // FASE 2: Background pan ke kanan.
     tl.to(
       bg, {
-      x: () => -horizontalDistance(),
-      duration: PAN.duration,
-      ease: "power1.inOut",
-    },
+        x: () => -horizontalDistance(),
+        duration: PAN.duration,
+        ease: "power1.inOut",
+      },
       at(PAN.start),
     );
 
@@ -1245,10 +1253,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     // FASE 4: Background kembali ke bawah.
     tl.to(
       bg, {
-      y: () => verticalDistance() * 1.5,
-      duration: BG_RETURN_DURATION,
-      ease: "power1.inOut",
-    },
+        y: () => verticalDistance() * 1.5,
+        duration: BG_RETURN_DURATION,
+        ease: "power1.inOut",
+      },
       at(STORY_BASE_UNITS),
     );
 
@@ -1264,42 +1272,42 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     tl.set(
       outroViewport, {
-      autoAlpha: 1,
-    },
+        autoAlpha: 1,
+      },
       OUTRO_REVEAL_START,
     );
 
     tl.fromTo(
       outroBg, {
-      yPercent: 150,
-      scale: 0,
-    }, {
-      yPercent: 4,
-      duration: OUTRO_REVEAL_DURATION * 0.5,
-      ease: "power1.inOut",
-      immediateRender: false,
-      scale: 0.7,
-    },
+        yPercent: 150,
+        scale: 0,
+      }, {
+        yPercent: 4,
+        duration: OUTRO_REVEAL_DURATION * 0.5,
+        ease: "power1.inOut",
+        immediateRender: false,
+        scale: 0.7,
+      },
       OUTRO_REVEAL_START,
     );
 
     tl.to(
       outroWin, {
-      autoAlpha: 1,
-      duration: 0.001,
-    },
+        autoAlpha: 1,
+        duration: 0.001,
+      },
       OUTRO_REVEAL_START,
     );
 
     tl.fromTo(
       outroWinZoom, {
-      scale: 6,
-    }, {
-      scale: 1,
-      duration: OUTRO_REVEAL_DURATION * 0.25,
-      ease: "power1.inOut",
-      immediateRender: false,
-    },
+        scale: 6,
+      }, {
+        scale: 1,
+        duration: OUTRO_REVEAL_DURATION * 0.25,
+        ease: "power1.inOut",
+        immediateRender: false,
+      },
       OUTRO_REVEAL_START,
     );
 
@@ -1309,18 +1317,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     tl.set(
       outroHeader, {
-      autoAlpha: 1,
-    },
+        autoAlpha: 1,
+      },
       OUTRO_HEADER_START,
     );
 
     tl.to(
       outroHeaderLines, {
-      yPercent: 0,
-      duration: 1,
-      ease: "power4.out",
-      stagger: 0.1,
-    },
+        yPercent: 0,
+        duration: 1,
+        ease: "power4.out",
+        stagger: 0.1,
+      },
       OUTRO_HEADER_START,
     );
   }
@@ -1351,55 +1359,55 @@ document.addEventListener("DOMContentLoaded", async () => {
     // BACKGROUND PHOTO: Scale 0.7 -> 1.15.
     tl.fromTo(
       outroBg, {
-      scale: 0.7,
-      transformOrigin: "center center",
-    }, {
-      scale: 1.15,
-      duration: 0.35,
-      ease: "power1.inOut",
-      immediateRender: false,
-    },
+        scale: 0.7,
+        transformOrigin: "center center",
+      }, {
+        scale: 1.15,
+        duration: 0.35,
+        ease: "power1.inOut",
+        immediateRender: false,
+      },
       0.01,
     );
 
     // WINDOW NAYA: Scale 1 -> 6.
     tl.fromTo(
       outroWinZoom, {
-      scale: 1,
-      transformOrigin: "center center",
-    }, {
-      scale: 6,
-      duration: 0.45,
-      ease: "power1.inOut",
-      immediateRender: false,
-    },
+        scale: 1,
+        transformOrigin: "center center",
+      }, {
+        scale: 6,
+        duration: 0.45,
+        ease: "power1.inOut",
+        immediateRender: false,
+      },
       0.035,
     );
 
     // Window tetap terlihat selama zoom.
     tl.to(
       outroWin, {
-      autoAlpha: 1,
-      duration: 0.45,
-      ease: "power1.inOut",
-      immediateRender: false,
-    },
+        autoAlpha: 1,
+        duration: 0.45,
+        ease: "power1.inOut",
+        immediateRender: false,
+      },
       0.035,
     );
 
     // OUTRO HEADER: Scale 1 -> 3 lalu menghilang.
     tl.fromTo(
       outroHeader, {
-      scale: 1,
-      autoAlpha: 1,
-      transformOrigin: "center center",
-    }, {
-      scale: 3,
-      autoAlpha: 0,
-      duration: 0.22,
-      ease: "power1.inOut",
-      immediateRender: false,
-    },
+        scale: 1,
+        autoAlpha: 1,
+        transformOrigin: "center center",
+      }, {
+        scale: 3,
+        autoAlpha: 0,
+        duration: 0.22,
+        ease: "power1.inOut",
+        immediateRender: false,
+      },
       0.025,
     );
 
@@ -1408,12 +1416,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (outroPoster) {
       tl.to(
         outroPoster, {
-        autoAlpha: 1,
-        scale: 1,
-        xPercent: -7.2,
-        duration: 0.38,
-        ease: "power2.out",
-      },
+          autoAlpha: 1,
+          scale: 1,
+          xPercent: -7.2,
+          duration: 0.38,
+          ease: "power2.out",
+        },
         0.35,
       );
     }
@@ -1421,12 +1429,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 2. BACKGROUND SHIFT TO THE RIGHT
     tl.to(
       outroBgZoom, {
-      xPercent: 15.5,
-      scale: 0.86,
-      transformOrigin: "center center",
-      duration: 0.25,
-      ease: "power1.inOut",
-    },
+        xPercent: 15.5,
+        scale: 0.86,
+        transformOrigin: "center center",
+        duration: 0.25,
+        ease: "power1.inOut",
+      },
       0.58,
     );
 
@@ -1438,21 +1446,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (outroPosterCopy && outroCopyLines.length) {
       tl.set(
         outroPosterCopy, {
-        autoAlpha: 1,
-      },
+          autoAlpha: 1,
+        },
         COPY_START,
       );
 
       tl.fromTo(
         outroCopyLines, {
-        yPercent: 115,
-      }, {
-        yPercent: 0,
-        duration: COPY_DURATION,
-        stagger: COPY_STAGGER,
-        ease: "power3.out",
-        immediateRender: false,
-      },
+          yPercent: 115,
+        }, {
+          yPercent: 0,
+          duration: COPY_DURATION,
+          stagger: COPY_STAGGER,
+          ease: "power3.out",
+          immediateRender: false,
+        },
         COPY_START,
       );
     }
@@ -1471,10 +1479,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     tl.to(
       locationGap, {
-      progress: 1,
-      duration: LOCATION_GAP,
-      ease: "none",
-    },
+        progress: 1,
+        duration: LOCATION_GAP,
+        ease: "none",
+      },
       COPY_END,
     );
   }
@@ -1660,24 +1668,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     titleReveal.to(
       title, {
-      autoAlpha: 1,
-      duration: 0.01,
-    },
+        autoAlpha: 1,
+        duration: 0.01,
+      },
       0,
     );
 
     titleReveal.fromTo(
       titleLines, {
-      yPercent: 125,
-      rotation: 2.5,
-    }, {
-      yPercent: 0,
-      rotation: 0,
-      duration: 1.2,
-      stagger: 0.08,
-      ease: "power3.out",
-      immediateRender: false,
-    },
+        yPercent: 125,
+        rotation: 2.5,
+      }, {
+        yPercent: 0,
+        rotation: 0,
+        duration: 1.2,
+        stagger: 0.08,
+        ease: "power3.out",
+        immediateRender: false,
+      },
       0.19,
     );
 
