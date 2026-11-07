@@ -57,25 +57,25 @@ async function preparePreloaderImages() {
 
 async function prepareHeroImages() {
   const heroImages = document.querySelectorAll(
-    ".sky-container img, .cloud-back img, .cloud-front img, .window-container img"
+    ".scene-hero .sky-container img, " +
+    ".scene-hero .cloud-back img, " +
+    ".scene-hero .cloud-front img, " +
+    ".scene-hero .window-container img"
   );
 
   await Promise.all(
     [...heroImages].map(async (img) => {
-      // Tunggu sampai gambar selesai dimuat.
       if (!img.complete) {
         await new Promise((resolve) => {
           img.addEventListener("load", resolve, {
-            once: true,
+            once: true
           });
-
           img.addEventListener("error", resolve, {
-            once: true,
+            once: true
           });
         });
       }
 
-      // Pastikan gambar sudah selesai didekode.
       if (img.naturalWidth > 0 && img.decode) {
         try {
           await img.decode();
@@ -113,7 +113,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // ==========================================
   // 1. LENIS
   // ==========================================
-
   const lenis = new Lenis({
     autoRaf: false,
     smoothWheel: true,
@@ -619,7 +618,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       Math.max(0, sky.offsetHeight - scene.clientHeight);
 
     // Semua perangkat memakai durasi scroll mobile.
-    const heroScreens = 16;
+    const heroScreens = 12;
 
     const denominator = Math.max(fills.length - 1, 1);
 
@@ -1517,7 +1516,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    const screens = 14.5;
+    const screens = 13.5;
 
     const tl = gsap.timeline({
       scrollTrigger: scenePin(scene, screens),
