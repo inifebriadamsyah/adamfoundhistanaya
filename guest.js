@@ -37,7 +37,7 @@ window.guestReady = (async () => {
     "zulfikar-fahmi-haedar": "Zulfikar Fahmi Haedar",
     "saifuddin-nurul-muhti": "Saifuddin Nurul Muhti",
     "ferdian-dwi-cahyo": "Ferdian Dwi Cahyo",
-    "aldy-syah-daviq-ramadhan": "Aldy Syah Daviq Ramadhan",
+    "aldy-syah-humaira": "Aldy Syah Daviq R. & Humaira Nur Pradani ",
     "syafrie-dwi-faisal": "Syafrie Dwi Faisal",
     "farhan-aji-pratama": "Farhan Aji Pratama"
   };
