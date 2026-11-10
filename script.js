@@ -1690,10 +1690,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const title = $(".location-title", workItem);
 
-    const headingTimeLines = gsap.utils.toArray(
-      ".location-heading [data-location-line], .location-time [data-location-line]",
+    const headingTitles = gsap.utils.toArray(
+      ".location-heading [data-location-line]",
       title
     );
+
+     const headingTime = gsap.utils.toArray(
+      ".location-time [data-location-line]",
+      title
+    );
+
 
     const addressLines = gsap.utils.toArray(
       ".location-address [data-location-line]",
@@ -1701,7 +1707,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
     const allTitleLines = [
-      ...headingTimeLines,
+      ...headingTitles,
+      ...headingTime,
       ...addressLines,
     ];
 
@@ -1868,7 +1875,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // TAHAP 1: Heading, tanggal, dan waktu
     titleReveal.fromTo(
-      headingTimeLines, {
+      headingTitles, {
         yPercent: 125,
         rotation: 2.5,
       }, {
@@ -1880,6 +1887,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         immediateRender: false,
       },
       0.39
+    );
+
+    titleReveal.fromTo(
+      headingTime, {
+        yPercent: 125,
+        rotation: 2.5,
+      }, {
+        yPercent: 0,
+        rotation: 0,
+        duration: 1.2,
+        stagger: 0.08,
+        ease: "power3.out",
+        immediateRender: false,
+      },
+      0.96
     );
 
     // TAHAP 2: Informasi alamat
@@ -1999,10 +2021,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
   }
+
   // ==========================================
   // 10. START ALL SCENES
   // ==========================================
-
   function startScenes() {
     const required = [
       ".scene-hero",
