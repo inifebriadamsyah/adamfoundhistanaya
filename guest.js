@@ -43,7 +43,7 @@ window.guestReady = (async () => {
   };
 
   // Cari nama penerima.
-  const guestName = theGuests[guestSlug] || "Tamu Undangan";
+  const guestName = theGuests[guestSlug] || "Nama Tamu Undangan";
 
   // Tampilkan nama pada hero.
   guestHeading.textContent = guestName;

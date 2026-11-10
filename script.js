@@ -1917,7 +1917,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ease: "power3.out",
         immediateRender: false,
       },
-      ">+=0.2"
+      ">+=0.12"
     );
 
     let addressRevealComplete = false;
