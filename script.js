@@ -1696,8 +1696,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // RUANG SCROLL
 
-    const GHOST_VH = 360; // reveal + cerita lokasi
-    const EXIT_VH = 300; // lokasi naik, footer tersingkap (jarak = EXIT_VH - 100)
+    const GHOST_VH = 420; // reveal + cerita lokasi
+    const EXIT_VH = 460; // lokasi naik, footer tersingkap (jarak = EXIT_VH - 100)
 
     $(".location-ghost-container", section)?.remove();
     $(".location-exit-item", section)?.remove();
@@ -1730,7 +1730,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       transformOrigin: "center center",
     });
     gsap.set(photoCards, {
-      x: () => window.innerWidth * 2.5,
+      x: () => window.innerWidth * 1.1,
       autoAlpha: 0
     });
     gsap.set(photoImages, {
@@ -1796,7 +1796,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       trigger: ghostItem,
       scrub: true, // tanpa smoothing, supaya tepi reveal pas dengan scroll
       start: "top bottom",
-      end: () => `+=${Math.round(window.innerHeight * 1.75)}`,
+      end: () => `+=${Math.round(window.innerHeight * 2.3)}`,
       invalidateOnRefresh: true,
     };
 
@@ -1949,7 +1949,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         trigger: exitItem,
         start: "top top",
         end: "bottom bottom",
-        scrub: 1.5,
+        scrub: 1,
         invalidateOnRefresh: true,
       },
     });
@@ -1961,7 +1961,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, 0);
     exit.to(footerBg, {
       scale: 1,
-      duration: 1.5
+      duration: 1
     }, 0);
 
     if (cloudBack && cloudFront) {
