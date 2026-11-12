@@ -110,9 +110,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const $ = (selector, root = document) =>
     root.querySelector(selector);
 
-  // ==========================================
+
   // 1. LENIS
-  // ==========================================
+
   const lenis = new Lenis({
     autoRaf: false,
     smoothWheel: true,
@@ -131,9 +131,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   lenis.stop();
 
-  // ==========================================
+
   // 2. PRELOADER
-  // ==========================================
+
 
   const createSplit = (selector, type, className) => {
     const element = $(selector);
@@ -438,9 +438,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     "-=0.75"
   );
 
-  // ==========================================
+
   // 3. HELPER SCENE
-  // ==========================================
+
 
   const timing = (isMobile) =>
     isMobile ? {
@@ -478,9 +478,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     copy: $(".scene-copy", scene),
   });
 
-  // ==========================================
+
   // WORD FILL
-  // ==========================================
+
 
   function splitWordFills(element) {
     if (!element) return [];
@@ -507,9 +507,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // ==========================================
+
   // CLOUD DRIFT
-  // ==========================================
+
 
   const driftByScene = new Map();
 
@@ -562,9 +562,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     driftObserver.observe(scene);
   }
 
-  // ==========================================
+
   // 4. HERO
-  // ==========================================
+
 
   function buildHero(isMobile, fills) {
     const scene = $(".scene-hero");
@@ -769,9 +769,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       cloudDriftStart
     );
 
-    // ==========================================
+
     // PAPER PLANE: FOLLOW HERO TEXT FILL
-    // ==========================================
+
 
     if (paperPlane) {
       const planeStartX = () =>
@@ -816,9 +816,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       );
     }
 
-    // ==========================================
+
     // CLOUD FADE
-    // ==========================================
+
 
     tl.to(
       [cloudBack, cloudFront], {
@@ -829,9 +829,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       textExitStart
     );
 
-    // ==========================================
+
     // HERO TEXT EXIT
-    // ==========================================
+
 
     tl.to(
       heroText, {
@@ -845,10 +845,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       textExitStart
     );
 
-    // ==========================================
-    // HERO COUPLE TEXT PARALLAX
-    // ==========================================
 
+    // HERO COUPLE TEXT PARALLAX
     if (
       coupleParallax &&
       parallaxTopTrack &&
@@ -956,9 +954,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     driftClouds(scene);
   }
 
-  // ==========================================
+
   // 5. INTRO
-  // ==========================================
+
 
   const CLIP = {
     hiddenBottom: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
@@ -1134,9 +1132,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
   }
 
-  // ==========================================
+
   // 6. OUTRO ELEMENTS
-  // ==========================================
+
 
   const outroScene = $(".scene-outro");
   const main = $("main");
@@ -1203,6 +1201,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Masukkan viewport ke dalam main.
   main.appendChild(outroViewport);
+  gsap.set(outroViewport, {
+    x: 0,
+    xPercent: 0,
+    y: 0,
+    yPercent: 0,
+    scale: 1
+  });
 
   // Sembunyikan sebelum OUTRO REVEAL dimulai.
   gsap.set(outroViewport, {
@@ -1252,9 +1257,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // ==========================================
+
   // 7. INTRO TIMELINE
-  // ==========================================
+
 
   function buildIntro(isMobile) {
     const section = $(".intro-section");
@@ -1419,9 +1424,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       at(STORY_BASE_UNITS)
     );
 
-    // ==========================================
+
     // OUTRO REVEAL
-    // ==========================================
+
 
     const OUTRO_DURATION =
       BG_RETURN_DURATION * 5.5;
@@ -1499,9 +1504,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
   }
 
-  // ==========================================
+
   // 8. OUTRO
-  // ==========================================
+
   function buildOutro(isMobile) {
     const scene = $(".scene-outro");
 
@@ -1638,7 +1643,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       COPY_STAGGER;
 
     const LOCATION_GAP = 0.35;
-
     const locationGap = {
       progress: 0,
     };
@@ -1653,162 +1657,164 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
   }
 
-  // ==========================================
   // 9. LOCATION WORK SECTION
-  // ==========================================
-  function buildLocationSection(footerReveal = null) {
-    const section = $(".location-section");
 
+
+  function buildLocationSection() {
+    const section = $(".location-section");
     if (!section) return;
 
     const stage = $(".location-stage", section);
-
-    const workItem = $(
-      ".location-work-item",
-      section
-    );
-
-    const backgroundImage = $(
-      ".location-image img",
-      workItem
-    );
-
-    const photoCards = gsap.utils.toArray(
-      ".location-photo-container",
-      workItem
-    );
-
-    const photoImages = gsap.utils.toArray(
-      ".location-photo-container img",
-      workItem
-    );
-
-    const overlay = $(
-      ".location-item-overlay",
-      workItem
-    );
-
+    const workItem = $(".location-work-item", section);
+    const backgroundImage = $(".location-image img", workItem);
+    const photoCards = gsap.utils.toArray(".location-photo-container", workItem);
+    const photoImages = gsap.utils.toArray(".location-photo-container img", workItem);
+    const overlay = $(".location-item-overlay", workItem);
     const title = $(".location-title", workItem);
 
-    const headingTitles = gsap.utils.toArray(
-      ".location-heading [data-location-line]",
-      title
-    );
+    const headingTitles = gsap.utils.toArray(".location-heading [data-location-line]", title);
+    const headingTime = gsap.utils.toArray(".location-time [data-location-line]", title);
+    const addressLines = gsap.utils.toArray(".location-address [data-location-line]", title);
+    const allTitleLines = [...headingTitles, ...headingTime, ...addressLines];
 
-     const headingTime = gsap.utils.toArray(
-      ".location-time [data-location-line]",
-      title
-    );
+    const footer = $(".site-footer");
+    const footerBg = $(".site-footer__bg", footer);
+    const cdCard = $(".cd-card", footer);
 
-
-    const addressLines = gsap.utils.toArray(
-      ".location-address [data-location-line]",
-      title
-    );
-
-    const allTitleLines = [
-      ...headingTitles,
-      ...headingTime,
-      ...addressLines,
-    ];
+    const cloudBack = $(".footer-cloud--back", footer);
+    const cloudFront = $(".footer-cloud--front", footer);
 
     if (
-      !stage ||
-      !workItem ||
-      !backgroundImage ||
-      photoCards.length !== 3 ||
-      !overlay ||
-      !title ||
-      !allTitleLines.length
+      !stage || !workItem || !backgroundImage || photoCards.length !== 3 ||
+      !overlay || !title || !allTitleLines.length ||
+      !footer || !footerBg || !cdCard
     ) {
       return;
     }
-    // GHOST SCROLL
+
+    backgroundImage.decode?.().catch(() => {});
+
+
+    // RUANG SCROLL
+
+    const GHOST_VH = 360; // reveal + cerita lokasi
+    const EXIT_VH = 300; // lokasi naik, footer tersingkap (jarak = EXIT_VH - 100)
+
     $(".location-ghost-container", section)?.remove();
+    $(".location-exit-item", section)?.remove();
 
-    const ghostContainer =
-      document.createElement("div");
+    const ghostContainer = document.createElement("div");
+    ghostContainer.className = "location-ghost-container";
+    ghostContainer.setAttribute("aria-hidden", "true");
 
-    ghostContainer.className =
-      "location-ghost-container";
-
-    ghostContainer.setAttribute(
-      "aria-hidden",
-      "true"
-    );
-
-    const ghostItem =
-      document.createElement("div");
-
-    ghostItem.className = "location-ghost-item";
-
-    ghostItem.style.height = "300vh";
-
+    const ghostItem = document.createElement("div");
+    ghostItem.style.cssText = `width:100%;height:${GHOST_VH}vh;`;
     ghostContainer.appendChild(ghostItem);
 
-    section.appendChild(ghostContainer);
+    const exitItem = document.createElement("div");
+    exitItem.className = "location-exit-item";
+    exitItem.setAttribute("aria-hidden", "true");
+    exitItem.style.height = `${EXIT_VH}vh`;
 
-    // INITIAL STATE
-    gsap.set(stage, {
-      clearProps: "clipPath",
-    });
+    section.append(ghostContainer, exitItem);
 
+    // KONDISI AWAL
     gsap.set(workItem, {
-      clipPath: "inset(100% 0% 0% 0%)",
+      clipPath: "inset(100% 0 0 0)",
+      yPercent: 0
     });
-
-    // Background.
     gsap.set(backgroundImage, {
       scale: 1.4,
       yPercent: 10,
-      opacity: 0.75,
+      opacity: 1,
+      filter: "blur(0px)",
       transformOrigin: "center center",
     });
-
-    // Photo cards.
     gsap.set(photoCards, {
       x: () => window.innerWidth * 1.1,
-      autoAlpha: 0,
+      autoAlpha: 0
     });
-
     gsap.set(photoImages, {
-      scale: 1.04,
+      scale: 1.04
     });
-
-    // Overlay.
     gsap.set(overlay, {
-      autoAlpha: 0,
+      autoAlpha: 0
     });
-
-    // Location text.
     gsap.set(title, {
-      autoAlpha: 0,
+      autoAlpha: 0
     });
-
     gsap.set(allTitleLines, {
       yPercent: 125,
-      rotation: 2.5,
+      rotation: 2.5
     });
+    gsap.set(footer, {
+      visibility: "hidden"
+    });
+    gsap.set(footerBg, {
+      scale: 1.15,
+      transformOrigin: "center bottom"
+    });
+    gsap.set(cdCard, {
+      opacity: 0,
+      y: 40
+    });
+    let cloudDrift = [];
 
-    // PHASE 1: WORK ITEM REVEAL
+    if (cloudBack && cloudFront) {
+      gsap.set(cloudBack, {
+        opacity: 0,
+        yPercent: 15,
+        scaleX: -1
+      });
+      gsap.set(cloudFront, {
+        opacity: 0,
+        yPercent: 20
+      });
+
+      cloudDrift = [
+        gsap.to(cloudBack, {
+          x: "35%",
+          duration: 18,
+          ease: "none",
+          repeat: -1,
+          yoyo: true,
+          paused: true,
+        }),
+        gsap.to(cloudFront, {
+          x: "25%",
+          duration: 10,
+          ease: "none",
+          repeat: -1,
+          yoyo: true,
+          delay: 3,
+          paused: true,
+        }),
+      ];
+    }
+
+    // PHASE 1: REVEAL (seperti CodePen)
     const stStarting = {
       trigger: ghostItem,
-      scrub: 1.2,
+      scrub: true, // tanpa smoothing, supaya tepi reveal pas dengan scroll
       start: "top bottom",
-
-      end: () =>
-        `+=${Math.round(window.innerHeight * 1.35)}`,
-
+      end: () => `+=${Math.round(window.innerHeight * 1.75)}`,
       invalidateOnRefresh: true,
     };
 
     gsap.to(workItem, {
-      clipPath: "inset(0% 0% 0% 0%)",
+      clipPath: "inset(0% 0 0 0)",
       ease: "none",
-      scrollTrigger: stStarting,
+      scrollTrigger: {
+        ...stStarting,
+        onUpdate: (self) => {
+          // Sembunyikan outro hanya saat lokasi sudah menutup penuh
+          gsap.set(outroViewport, {
+            autoAlpha: self.progress >= 1 ? 0 : 1
+          });
+        },
+      },
     });
 
-    // Background zoom.
     gsap.to(backgroundImage, {
       yPercent: 10,
       scale: 1.2,
@@ -1816,215 +1822,173 @@ document.addEventListener("DOMContentLoaded", async () => {
       scrollTrigger: stStarting,
     });
 
-    // PHASE 2: BACKGROUND DARKEN
+    // PHASE 2: GAMBAR BLUR + GELAP
     const stDarken = {
       trigger: ghostItem,
-      scrub: 1,
+      scrub: true,
       start: "top top",
-      end: "35% top",
+      end: "30% top",
       invalidateOnRefresh: true,
     };
 
     gsap.to(backgroundImage, {
-      opacity: 0.3,
-      ease: "none",
+      filter: "blur(2px)",
+      ease: "power2.inOut",
       scrollTrigger: stDarken,
     });
 
     gsap.to(overlay, {
-      autoAlpha: 0.22,
+      autoAlpha: 0.55,
       ease: "none",
       scrollTrigger: stDarken,
     });
 
-    // PHASE 3: THREE PHOTO CARDS SLIDE IN
-    const stPhotos = {
-      trigger: ghostItem,
-      scrub: 1.3,
-      start: "35% top",
-      end: "92% top",
-      invalidateOnRefresh: true,
-    };
-
+    // PHASE 3: TIGA FOTO SLIDE-IN
     gsap.to(photoCards, {
       x: 0,
       autoAlpha: 1,
       stagger: 0.12,
       duration: 1,
       ease: "none",
-      scrollTrigger: stPhotos,
-    });
-
-    // PHASE 4: LOCATION TEXT
-    const titleReveal = gsap.timeline({
       scrollTrigger: {
         trigger: ghostItem,
-        start: "92% top",
-        toggleActions: "play none none none",
+        scrub: 1.3,
+        start: "30% top",
+        end: "75% top",
         invalidateOnRefresh: true,
       },
     });
 
-    titleReveal.to(
-      title, {
-        autoAlpha: 1,
-        duration: 0.01,
+    // PHASE 4: TEKS LOKASI (berbasis waktu)
+    let addressDone = false;
+    const titleReveal = gsap.timeline({
+      scrollTrigger: {
+        trigger: ghostItem,
+        start: "75% top",
+        toggleActions: "play none none none",
+        invalidateOnRefresh: true,
+        onEnter: () => {
+          if (!addressDone) lenis.stop();
+        },
       },
-      0
-    );
-
-    // TAHAP 1: Heading, tanggal, dan waktu
-    titleReveal.fromTo(
-      headingTitles, {
-        yPercent: 125,
-        rotation: 2.5,
-      }, {
-        yPercent: 0,
-        rotation: 0,
-        duration: 1.2,
-        stagger: 0.08,
-        ease: "power3.out",
-        immediateRender: false,
-      },
-      0.39
-    );
-
-    titleReveal.fromTo(
-      headingTime, {
-        yPercent: 125,
-        rotation: 2.5,
-      }, {
-        yPercent: 0,
-        rotation: 0,
-        duration: 1.2,
-        stagger: 0.08,
-        ease: "power3.out",
-        immediateRender: false,
-      },
-      0.96
-    );
-
-    // TAHAP 2: Informasi alamat
-    titleReveal.fromTo(
-      addressLines, {
-        yPercent: 125,
-        rotation: 2.5,
-      }, {
-        yPercent: 0,
-        rotation: 0,
-        duration: 1.2,
-        stagger: 0.08,
-        ease: "power3.out",
-        immediateRender: false,
-      },
-      ">+=0.12"
-    );
-
-    let addressRevealComplete = false;
-
-    const footerScrollTrigger = ScrollTrigger.create({
-      trigger: ghostItem,
-
-      start: "92% top",
-      end: "bottom top",
-
-      invalidateOnRefresh: true,
-
-      onEnter: () => {
-        if (addressRevealComplete) {
-          footerReveal?.play(0);
-        }
-      },
-
-      onLeave: () => {
-        if (addressRevealComplete) {
-          footerReveal?.play();
-        }
-      },
-
-      onEnterBack: () => {
-        if (addressRevealComplete) {
-          footerReveal?.restart();
-        }
-      },
-
-      onLeaveBack: () => {
-        footerReveal?.reverse();
+      onComplete: () => {
+        addressDone = true;
+        lenis.start();
       },
     });
 
-    // Tunggu sampai seluruh teks alamat selesai muncul.
-    titleReveal.eventCallback("onComplete", () => {
-      addressRevealComplete = true;
+    titleReveal.to(title, {
+      autoAlpha: 1,
+      duration: 0.01
+    }, 0);
 
-      // Jika pengguna sudah melewati atau sedang berada
-      // dalam area trigger, tampilkan footer.
-      if (
-        footerScrollTrigger.isActive ||
-        footerScrollTrigger.progress > 0
-      ) {
-        footerReveal?.play(0);
-      }
-    });
-
-    // PHASE 5: FINAL MOVEMENT
-    const stFinal = {
-      trigger: ghostItem,
-      scrub: true,
-      start: "92% top",
-      end: "bottom top",
-      invalidateOnRefresh: true,
+    const lineFrom = {
+      yPercent: 125,
+      rotation: 2.5
+    };
+    const lineIn = {
+      yPercent: 0,
+      rotation: 0,
+      duration: 1.2,
+      stagger: 0.08,
+      ease: "power3.out",
+      immediateRender: false,
     };
 
-    gsap.to(overlay, {
-      autoAlpha: 0.38,
-      ease: "none",
-      scrollTrigger: stFinal,
-    });
-  }
+    titleReveal.fromTo(headingTitles, lineFrom, lineIn, 0.39);
+    titleReveal.fromTo(headingTime, lineFrom, lineIn, 0.96);
+    titleReveal.fromTo(addressLines, lineFrom, lineIn, 1.78);
 
-  gsap.to(outroViewport, {
-    clipPath: "inset(0% 0% 100% 0%)",
-    ease: "none",
+    // PHASE 5: gelap sedikit lagi sampai akhir
+    gsap.fromTo(
+      overlay, {
+        autoAlpha: 0.55
+      }, {
+        autoAlpha: 0.75,
+        ease: "none",
+        immediateRender: false, // penting: jangan set 0.55 saat load
+        scrollTrigger: {
+          trigger: ghostItem,
+          scrub: true,
+          start: "75% top",
+          end: "bottom top",
+          invalidateOnRefresh: true,
+        },
+      }
+    );
 
-    scrollTrigger: {
-      trigger: section,
+    // EXIT: LOKASI NAIK PELAN, FOOTER TERSINGKAP
+    ScrollTrigger.create({
+      trigger: exitItem,
       start: "top bottom",
-      end: "top 20%",
-      scrub: 1.2,
       invalidateOnRefresh: true,
-    },
-  });
-
-  // ==========================================
-  // STICKY LOCATION FOOTER
-  // ==========================================
-
-  function buildLocationFooter() {
-    const footer = $(".location-sticky-footer");
-
-    if (!footer) return null;
-
-    // Kondisi awal: tersembunyi.
-    gsap.set(footer, {
-      autoAlpha: 0,
-      y: 35,
+      onEnter: () => {
+        gsap.set(footer, {
+          visibility: "visible"
+        });
+        cloudDrift.forEach((t) => t.play());
+      },
+      onEnterBack: () => {
+        gsap.set(footer, {
+          visibility: "visible"
+        });
+        cloudDrift.forEach((t) => t.play());
+      },
+      onLeaveBack: () => {
+        gsap.set(footer, {
+          visibility: "hidden"
+        });
+        cloudDrift.forEach((t) => t.pause());
+      },
     });
 
-    // Kembalikan tween dalam kondisi paused.
-    return gsap.to(footer, {
-      autoAlpha: 1,
+    const exit = gsap.timeline({
+      defaults: {
+        ease: "none"
+      },
+      scrollTrigger: {
+        trigger: exitItem,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 1,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    exit.to(workItem, {
+      yPercent: -100,
+      duration: 1,
+      ease: "power1.inOut"
+    }, 0);
+    exit.to(footerBg, {
+      scale: 1,
+      duration: 1
+    }, 0);
+
+    if (cloudBack && cloudFront) {
+      exit.to(cloudBack, {
+        opacity: 0.8,
+        yPercent: 0,
+        duration: 0.9,
+        ease: "power1.out"
+      }, 0.1);
+      exit.to(cloudFront, {
+        opacity: 0.95,
+        yPercent: 0,
+        duration: 0.9,
+        ease: "power1.out"
+      }, 0.2);
+    }
+
+    exit.to(cdCard, {
+      opacity: 1,
       y: 0,
       duration: 0.5,
-      ease: "power3.out",
-      paused: true,
-    });
-
+      ease: "power2.out"
+    }, 0.5);
   }
 
-  // ==========================================
   // 10. START ALL SCENES
-  // ==========================================
   function startScenes() {
     const required = [
       ".scene-hero",
@@ -2065,8 +2029,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       buildHero(true, heroFills);
       buildIntro(true);
       buildOutro(true);
-      const footerReveal = buildLocationFooter();
-      buildLocationSection(footerReveal);
+      buildLocationSection();
       ScrollTrigger.refresh();
       lenis.start();
     } catch (_) {
@@ -2075,3 +2038,46 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 });
+
+function initCountdown() {
+  // 22 November 2026, 10.30 WIB (UTC+7)
+  const target = new Date("2026-11-22T10:30:00+07:00").getTime();
+
+  const els = {
+    days: document.querySelector('[data-countdown="days"]'),
+    hours: document.querySelector('[data-countdown="hours"]'),
+    minutes: document.querySelector('[data-countdown="minutes"]'),
+    seconds: document.querySelector('[data-countdown="seconds"]'),
+  };
+  const title = document.querySelector("[data-countdown-title]");
+
+  if (!Object.values(els).every(Boolean)) return;
+
+  const pad = (n) => String(n).padStart(2, "0");
+  let timerId;
+
+  const tick = () => {
+    const diff = Math.max(0, target - Date.now());
+    const total = Math.floor(diff / 1000);
+
+    els.days.textContent = pad(Math.floor(total / 86400));
+    els.hours.textContent = pad(Math.floor((total % 86400) / 3600));
+    els.minutes.textContent = pad(Math.floor((total % 3600) / 60));
+    els.seconds.textContent = pad(total % 60);
+
+    if (diff === 0) {
+      if (title) title.textContent = "Hari bahagia telah tiba";
+      clearInterval(timerId);
+    }
+  };
+
+  tick();
+  timerId = setInterval(tick, 1000);
+}
+
+// navigator.userAgentData hanya ada di browser Chromium
+if (navigator.userAgentData) {
+  document.documentElement.classList.add("supports-glass-distortion");
+}
+
+document.addEventListener("DOMContentLoaded", initCountdown);

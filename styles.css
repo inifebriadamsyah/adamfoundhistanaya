@@ -837,51 +837,39 @@ main {
   text-align: right;
 }
 
-
 /* =====   LOCATION SECTION   ===== */
 .location-section {
   position: relative;
   z-index: 30;
   width: 100%;
-  height: 400vh;
-  min-height: 400vh;
-  overflow: visible;
   isolation: isolate;
   background: transparent;
   color: #fff;
+  pointer-events: none;
 }
 
-/* =====   STICKY STAGE   ===== */
 .location-stage {
-  position: sticky;
-  top: 0;
-  width: 100%;
-  height: 100vh;
-  height: 100svh;
-  margin-bottom: -100svh;
-  overflow: visible;
-  isolation: isolate;
-  background: transparent;
+  position: relative;
+  height: 0;
 }
 
-/* =====   LOCATION WORK ITEM   ===== */
 .location-work-item {
   position: fixed;
   top: 0;
-  left: 50%;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
   width: min(100vw, var(--site-width));
-  height: 100vh;
   height: 100svh;
   overflow: hidden;
-  background: #000000;
-  transform: translateX(-50%);
-  clip-path: inset(100% 0% 0% 0%);
+  background: #0d1a24;
+  clip-path: inset(100% 0 0 0);
   z-index: 1;
-  will-change: clip-path;
+  will-change: clip-path, transform;
+  pointer-events: none;
 }
 
 /* =====   BACKGROUND IMAGE   ===== */
-
 .location-image {
   position: absolute;
   inset: 0;
@@ -949,7 +937,7 @@ main {
 /* =====   LOCATION TITLE   ===== */
 .location-title {
   position: absolute;
-  top: 58%;
+  top: 60%;
   left: 6%;
   right: 6%;
   transform: translateY(-50%);
@@ -993,8 +981,7 @@ main {
   flex-direction: column;
   width: 100%;
   max-width: 38ch;
-  margin-top: 6.5rem;
-
+  margin-top: 9rem;
   font-family: 'Manrope', sans-serif;
   font-size: clamp(0.95rem, 3.2vw, 1.25rem);
   font-weight: 350;
@@ -1025,17 +1012,13 @@ main {
 }
 
 /* =====   LOCATION SCROLL SPACE   ===== */
-.location-ghost-container {
+.location-ghost-container,
+.location-exit-item {
   position: relative;
   width: 100%;
   pointer-events: none;
 }
 
-.location-ghost-item {
-  position: relative;
-  width: 100%;
-  height: 300vh;
-}
 
 /* =====   DESKTOP SURROUNDING BACKGROUND   ===== */
 @media (min-width: 479px) {
@@ -1062,8 +1045,7 @@ main {
 .outro-overlay-viewport {
   position: fixed;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
+
   width: min(100vw, var(--site-width));
   height: 100dvh;
   overflow: hidden;
@@ -1072,6 +1054,21 @@ main {
   visibility: hidden;
   opacity: 0;
   z-index: 19;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  width: min(100vw, var(--site-width));
+  height: 100dvh;
+  overflow: hidden;
+  isolation: isolate;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  z-index: 19;
+  transform-origin: center top;
+  will-change: transform, filter;
 }
 
 .outro-overlay-bg {
@@ -1297,62 +1294,258 @@ main {
 /* ==========================================
    STICKY LOCATION FOOTER
 ========================================== */
-
-.location-sticky-footer {
+.site-footer {
   position: fixed;
-  left: 50%;
-  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
   width: min(100vw, var(--site-width));
-  display: flex;
-  justify-content: center;
-  padding: 14px 16px
-    calc(14px + env(safe-area-inset-bottom));
-
-  background: linear-gradient(
-    to bottom,
-    rgba(11, 11, 11, 0),
-    rgba(11, 11, 11, 0.94) 35%
-  );
-
-  transform: translateX(-50%);
-  z-index: 100;
-  opacity: 0;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--sky-fallback);
+  z-index: 1;
   visibility: hidden;
+}
+
+.site-footer__rail {
+  position: relative;
+  height: calc(100svh * 2);
+  top: -100svh;
+}
+
+.site-footer__sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--sky-fallback);
+}
+
+.site-footer__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+  will-change: transform;
+}
+
+/* ===== FOOTER: LAYER ===== */
+.site-footer__bg { z-index: 0; }
+
+.footer-cloud {
+  position: absolute;
+  top: 0;
+  left: -110%;          /* ruang geser kiri-kanan agar tidak ada tepi kosong */
+  width: 250%;
+  height: 62%;          /* hanya area langit, tidak menutupi pasangan */
+  z-index: 1;
   pointer-events: none;
   will-change: transform, opacity;
 }
 
-.location-map-button {
+.footer-cloud img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.site-footer__content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  /* atas: di bawah logo fixed; bawah: jarak tombol dari tepi */
+  padding: max(5.2rem, 8.3svh) 0 calc(3svh + env(safe-area-inset-bottom));
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  text-transform: uppercase;
+  font-weight: 300;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+/* ===== COUNTDOWN CARD ===== */
+.cd-card {
+  --glass-radius: 26px;
+  width: 80%;
+  height: clamp(380px, 54svh, 640px);
+  pointer-events: auto;
+  transition: none;
+}
+
+.cd-inner {
+  display: flex;
+  flex-direction: column;
+  padding: 2.2rem 8% 2rem;
+}
+
+.cd-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.75);
+  font-size: clamp(0.9rem, 4.2vw, 1.1rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.cd-star {
+  width: 1.35em;
+  height: 1.35em;
+}
+
+.cd-time-wrap {
+  flex: 1;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  width: 100%;
-  min-height: 50px;
-  padding: 12px 0px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 8px;
-  background: var(--light);
-  color: var(--dark);
-  font-family: 'Manrope', sans-serif;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.015em;
-  text-decoration: none;
+}
+
+.cd-time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(2.5rem, 12.8vw, 4.8rem);
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+}
+
+.cd-time-labels {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(50% + 0.5 * clamp(2.2rem, 12.8vw, 3.8rem) + 0.7rem);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
   text-align: center;
+  font-size: clamp(0.45rem, 20vw, 0.5rem);
+  letter-spacing: 0.08em;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.cd-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.cd-label {
+  font-size: clamp(1.05rem, 5.4vw, 1.6rem);
+  font-weight: 400;
+  line-height: 1.15;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+}
+
+.cd-sec {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.9rem;
+}
+
+.cd-pill {
+  display: grid;
+  place-items: center;
+  width: 3.1rem;
+  height: 1.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+}
+
+.cd-seconds {
+  font-size: clamp(2.2rem, 11.5vw, 3.5rem);
+  font-weight: 300;
+  line-height: 0.9;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+}
+
+/* ===== MAP BUTTON ===== */
+.location-map-button {
+  --glass-radius: 20px;
+  width: 90%;
+  min-height: 66px;
+  margin-top: auto;            /* dorong ke bawah */
+  text-decoration: none;
+  color: #fff;
   pointer-events: auto;
-  transition:
-    background 0.3s ease,
-    color 0.3s ease;
 }
 
-.location-map-button svg {
-  flex-shrink: 0;
+.location-map-button .liquidGlass-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.7rem;
+  padding: 0 1rem;
+  font-size: clamp(0.72rem, 2.9vw, 0.84rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
-.location-map-button:hover {
-  background: #fff;
-  color: #000;
+.location-map-button:active {
+  transform: scale(0.98);
+}
+
+/* ===== LIQUID GLASS ===== */
+.liquidGlass-wrapper {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  border-radius: var(--glass-radius, 20px);
+  box-shadow: 0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
+}
+
+.liquidGlass-effect,
+.liquidGlass-tint,
+.liquidGlass-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.liquidGlass-effect {
+  z-index: 0;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* Distorsi SVG hanya di Chromium (class ditambah lewat JS) */
+.supports-glass-distortion .liquidGlass-effect {
+  filter: url(#glass-distortion);
+}
+
+.liquidGlass-tint {
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.18);
+  /* 0.5 terlalu pekat untuk desain ini */
+}
+
+.liquidGlass-shine {
+  z-index: 2;
+  box-shadow:
+    inset 1px 1px 1px 0 rgba(255, 255, 255, 0.45),
+    inset -1px -1px 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.liquidGlass-text {
+  position: relative;
+  z-index: 3;
+  flex: 1;
+  color: #fff;
 }
 
 .sky-container,
