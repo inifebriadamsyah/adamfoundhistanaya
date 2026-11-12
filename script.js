@@ -1427,7 +1427,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // OUTRO REVEAL
 
-
     const OUTRO_DURATION =
       BG_RETURN_DURATION * 5.5;
 
@@ -1731,7 +1730,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       transformOrigin: "center center",
     });
     gsap.set(photoCards, {
-      x: () => window.innerWidth * 1.1,
+      x: () => window.innerWidth * 2.5,
       autoAlpha: 0
     });
     gsap.set(photoImages, {
@@ -1763,26 +1762,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (cloudBack && cloudFront) {
       gsap.set(cloudBack, {
         opacity: 0,
-        yPercent: 15,
+        yPercent: -12,
         scaleX: -1
       });
       gsap.set(cloudFront, {
         opacity: 0,
-        yPercent: 20
+        yPercent: -9
       });
 
       cloudDrift = [
         gsap.to(cloudBack, {
-          x: "35%",
-          duration: 18,
+          x: "38%",
+          duration: 34,
           ease: "none",
           repeat: -1,
           yoyo: true,
           paused: true,
         }),
         gsap.to(cloudFront, {
-          x: "25%",
-          duration: 10,
+          x: "26%",
+          duration: 30,
           ease: "none",
           repeat: -1,
           yoyo: true,
@@ -1950,7 +1949,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         trigger: exitItem,
         start: "top top",
         end: "bottom bottom",
-        scrub: 1,
+        scrub: 1.5,
         invalidateOnRefresh: true,
       },
     });
@@ -1962,20 +1961,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, 0);
     exit.to(footerBg, {
       scale: 1,
-      duration: 1
+      duration: 1.5
     }, 0);
 
     if (cloudBack && cloudFront) {
       exit.to(cloudBack, {
         opacity: 0.8,
         yPercent: 0,
-        duration: 0.9,
+        duration: 3.9,
         ease: "power1.out"
       }, 0.1);
       exit.to(cloudFront, {
         opacity: 0.95,
         yPercent: 0,
-        duration: 0.9,
+        duration: 2.9,
         ease: "power1.out"
       }, 0.2);
     }
