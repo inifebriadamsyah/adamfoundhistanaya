@@ -1695,9 +1695,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // RUANG SCROLL
-
-    const GHOST_VH = 420; // reveal + cerita lokasi
-    const EXIT_VH = 460; // lokasi naik, footer tersingkap (jarak = EXIT_VH - 100)
+    const GHOST_VH = 420;
+    const EXIT_VH = 460;
 
     $(".location-ghost-container", section)?.remove();
     $(".location-exit-item", section)?.remove();
