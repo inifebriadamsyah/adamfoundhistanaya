@@ -509,10 +509,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
   // CLOUD DRIFT
-
-
   const driftByScene = new Map();
-
   const driftObserver = new IntersectionObserver((entries) => {
     entries.forEach(({
       target,
@@ -557,15 +554,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     ];
 
     driftByScene.set(scene, tweens);
-
     driftObserver.unobserve(scene);
     driftObserver.observe(scene);
   }
 
 
   // 4. HERO
-
-
   function buildHero(isMobile, fills) {
     const scene = $(".scene-hero");
 
@@ -771,8 +765,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // PAPER PLANE: FOLLOW HERO TEXT FILL
-
-
     if (paperPlane) {
       const planeStartX = () =>
         scene.clientWidth + paperPlane.offsetWidth;
@@ -818,8 +810,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // CLOUD FADE
-
-
     tl.to(
       [cloudBack, cloudFront], {
         opacity: 0,
@@ -831,8 +821,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // HERO TEXT EXIT
-
-
     tl.to(
       heroText, {
         y: () =>
@@ -954,10 +942,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     driftClouds(scene);
   }
 
-
   // 5. INTRO
-
-
   const CLIP = {
     hiddenBottom: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
 
@@ -1134,8 +1119,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
   // 6. OUTRO ELEMENTS
-
-
   const outroScene = $(".scene-outro");
   const main = $("main");
 
@@ -1259,8 +1242,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
   // 7. INTRO TIMELINE
-
-
   function buildIntro(isMobile) {
     const section = $(".intro-section");
 
@@ -1426,7 +1407,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // OUTRO REVEAL
-
     const OUTRO_DURATION =
       BG_RETURN_DURATION * 5.5;
 
@@ -1505,7 +1485,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
   // 8. OUTRO
-
   function buildOutro(isMobile) {
     const scene = $(".scene-outro");
 
@@ -1657,8 +1636,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // 9. LOCATION WORK SECTION
-
-
   function buildLocationSection() {
     const section = $(".location-section");
     if (!section) return;
@@ -1696,7 +1673,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // RUANG SCROLL
     const GHOST_VH = 420;
-    const EXIT_VH = 460;
+    const EXIT_VH = 560;
 
     $(".location-ghost-container", section)?.remove();
     $(".location-exit-item", section)?.remove();
@@ -1790,10 +1767,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       ];
     }
 
-    // PHASE 1: REVEAL (seperti CodePen)
+    // PHASE 1: REVEAL
     const stStarting = {
       trigger: ghostItem,
-      scrub: true, // tanpa smoothing, supaya tepi reveal pas dengan scroll
+      scrub: true,
       start: "top bottom",
       end: () => `+=${Math.round(window.innerHeight * 2.3)}`,
       invalidateOnRefresh: true,
@@ -1805,7 +1782,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       scrollTrigger: {
         ...stStarting,
         onUpdate: (self) => {
-          // Sembunyikan outro hanya saat lokasi sudah menutup penuh
+
           gsap.set(outroViewport, {
             autoAlpha: self.progress >= 1 ? 0 : 1
           });
@@ -1845,8 +1822,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     gsap.to(photoCards, {
       x: 0,
       autoAlpha: 1,
-      stagger: 0.12,
-      duration: 1,
+      stagger: 0.32,
+      duration: 1.8,
       ease: "none",
       scrollTrigger: {
         trigger: ghostItem,
@@ -1955,12 +1932,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     exit.to(workItem, {
       yPercent: -100,
-      duration: 1,
+      duration: 2.7,
       ease: "power1.inOut"
     }, 0);
     exit.to(footerBg, {
       scale: 1,
-      duration: 1
+      duration: 2.7
     }, 0);
 
     if (cloudBack && cloudFront) {
@@ -2009,7 +1986,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-      // Word-fill hanya untuk hero.
       const heroFills = splitWordFills(
         $(".scene-hero .scene-copy h2")
       );
@@ -2031,14 +2007,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       ScrollTrigger.refresh();
       lenis.start();
     } catch (_) {
-      // Pastikan Lenis tidak terkunci jika inisialisasi gagal.
       lenis.start();
     }
   }
 });
 
 function initCountdown() {
-  // 22 November 2026, 10.30 WIB (UTC+7)
   const target = new Date("2026-11-22T10:30:00+07:00").getTime();
 
   const els = {
@@ -2073,7 +2047,6 @@ function initCountdown() {
   timerId = setInterval(tick, 1000);
 }
 
-// navigator.userAgentData hanya ada di browser Chromium
 if (navigator.userAgentData) {
   document.documentElement.classList.add("supports-glass-distortion");
 }
