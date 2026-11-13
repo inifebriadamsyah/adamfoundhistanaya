@@ -1673,7 +1673,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // RUANG SCROLL
     const GHOST_VH = 420;
-    const EXIT_VH = 560;
+    const EXIT_VH = 500;
 
     $(".location-ghost-container", section)?.remove();
     $(".location-exit-item", section)?.remove();
