@@ -39,7 +39,13 @@ window.guestReady = (async () => {
     "ferdian-dwi-cahyo": "Ferdian Dwi Cahyo",
     "aldy-syah-humaira": "Aldy Syah Daviq R. & Humaira Nur Pradani ",
     "syafrie-dwi-faisal": "Syafrie Dwi Faisal",
-    "farhan-aji-pratama": "Farhan Aji Pratama"
+    "farhan-aji-pratama": "Farhan Aji Pratama",
+    "yoga-faisal-nur": "Yoga Faisal Nur",
+    "imam-muslim-luthfiana-ratna-wati": "Imam Muslim & Luthfiana Ratna Wati",
+    "m-nur-shoim-fuadati-mushaffa": "M. Nur Shoim & Fuadati Mushaffa",
+    "m-shodiq-wahyudi": "M. Shodiq Wahyudi",
+    "eko-purnomo": "Eko Purnomo",
+    "melani-vira-anissa-n-a": "Melani Vira Anissa N. A."
   };
 
   // Cari nama penerima.
