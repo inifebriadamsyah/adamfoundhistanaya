@@ -1937,7 +1937,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, 0);
     exit.to(footerBg, {
       scale: 1,
-      duration: 2.7
+      duration: 2.5
     }, 0);
 
     if (cloudBack && cloudFront) {
