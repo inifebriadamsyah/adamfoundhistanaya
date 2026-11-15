@@ -1960,7 +1960,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       y: 0,
       duration: 0.75,
       ease: "power2.out"
-    }, 0.85);
+    }, 0.95);
   }
 
   // 10. START ALL SCENES
