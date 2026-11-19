@@ -58,7 +58,10 @@ window.guestReady = (async () => {
     "alfina-yundika": "Alfina Yundika",
     "nabila-qurotaaayun": "Nabila Qurotaa'ayun",
     "pratiwi-ayuningrum-wulandari": "Pratiwi Ayuningrum Wulandari",
-    "mas-farel": "Mas Alfarel Zaky Maulana"
+    "mas-farel": "Mas Alfarel Zaky Maulana",
+    "adino-alvin-h": "Adino Alvin H",
+    "tara-permatasari": "Tara Permatasari",
+    "afa-sholihah": "Afa Sholihah"
   };
 
   // Cari nama penerima.
